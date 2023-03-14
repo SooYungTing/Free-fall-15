@@ -6,7 +6,7 @@ class FreeFallGUI:
     def __init__(self, master):
         self.root = master
         self.root.attributes("-fullscreen", True)
-        self.root.title("Free-Fall 15 Simulation")
+        self.root.title("Free-Fall 15 Simulation Instructions")
 
         # Set background image
         bg_image = Image.open("Background.png")
