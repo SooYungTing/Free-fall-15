@@ -39,7 +39,7 @@ class FreeFallGUI:
         self.next_button.place(x=1270, y=self.root.winfo_screenheight()-100)
 
 
-    def advance_to_simulation(self):
+    def open_MainPage(self):
         import MainPage
 
 
