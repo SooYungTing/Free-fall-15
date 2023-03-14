@@ -32,6 +32,9 @@ elif object == "Brick":
 elif object == "Car":
     object_weight = 1200 * g[planet]
     object_diameter = 1.5
+else:
+    print("Invalid object type. Please choose Marshmallow, Brick, or Car.")
+    exit()
 
 # Calculate initial velocity and gravitational potential energy
 v0 = math.sqrt(2 * g[planet] * height)
@@ -44,22 +47,22 @@ if air_resistance == "Big":
 elif air_resistance == "Small":
     Cd = 0.5
 elif air_resistance == 'Disable':
-    Cd = 0
+    Cd = 1e-16  
 
 A = math.pi * (object_diameter / 2) ** 2
-v_terminal = math.sqrt((2 * m * g[planet]) / (Cd * rho_air * A))
-ke = 0.5 * m * v_terminal ** 2
+terminal_v = math.sqrt((2 * m * g[planet]) / (Cd * rho_air * A))
+ke = 0.5 * m * terminal_v ** 2
 
 # Calculate impact force
 if angle == "Rotate 90":
-    impact_time = v_terminal / g[planet]
-    impact_force = (m * g[planet] + ke / v_terminal) / impact_time
+    impact_time = terminal_v / g[planet]
+    impact_force = (m * g[planet] + ke / terminal_v) / impact_time
 else:
     impact_force = m * g[planet]
 
 # Print results
 print("Initial velocity:", v0, "m/s")
-print("Terminal velocity:", v_terminal, "m/s")
+print("Terminal velocity:", terminal_v, "m/s")
 print("Kinetic energy:", ke, "J")
 print("Gravitational potential energy:", gpe, "J")
 print("Impact force:", impact_force, "N")
