@@ -34,9 +34,9 @@ class TheoryGUI:
         self.theory1_label.pack(anchor='w')
 
         # Create button to go back
-        self.next_button = tk.Button(self.root, text="Back", font=("Times New Roman", 15), command=self.open_MainPage,
+        self.back_button = tk.Button(self.root, text="Back", font=("Times New Roman", 15), command=self.open_MainPage,
                                      width=12, height=2)
-        self.next_button.place(x=1270, y=self.root.winfo_screenheight() - 100)
+        self.back_button.place(x=1270, y=self.root.winfo_screenheight() - 100)
 
     def open_MainPage(self):
         import MainPage
