@@ -47,18 +47,20 @@ if air_resistance == "Big":
 elif air_resistance == "Small":
     Cd = 0.5
 elif air_resistance == 'Disable':
-    Cd = 1e-16  
+    Cd = 1e-16
 
+# Calculate terminal velocity and kinetic energy
 A = math.pi * (object_diameter / 2) ** 2
 terminal_v = math.sqrt((2 * m * g[planet]) / (Cd * rho_air * A))
 ke = 0.5 * m * terminal_v ** 2
 
 # Calculate impact force
 if angle == "Rotate 90":
-    impact_time = terminal_v / g[planet]
+    impact_time = v0 / g[planet] # Use initial velocity instead of terminal velocity
     impact_force = (m * g[planet] + ke / terminal_v) / impact_time
 else:
     impact_force = m * g[planet]
+
 
 # Print results
 print("Initial velocity:", v0, "m/s")
