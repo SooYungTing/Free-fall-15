@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import sys
 
 class MainPageGUI:
     def __init__(self, master):
@@ -16,8 +17,12 @@ class MainPageGUI:
 
         # Create label to display welcome message
         welcome_message = "Welcome to the Free-Fall 15 simulation!"
-        self.welcome_label = tk.Label(self.root, text=welcome_message, font=("Times New Roman", 40, "bold"), fg="Yellow", bg="SystemTransparent")
-        self.welcome_label.pack(pady=20)
+        canvas = tk.Canvas(self.root)
+        canvas.create_image(0, 0, image = self.bg_photo, anchor ='nw')
+        canvas.create_text(580, 130, text=welcome_message, fill="yellow", font=("Times New Roman", 40, "bold"))
+        canvas.pack(fill="both", expand= True)
+        # self.welcome_label = tk.Label(self.root, text=welcome_message, font=("Times New Roman", 40, "bold"), fg="Yellow", bg='transparent')
+        # self.welcome_label.pack(pady=20)
 
         # Create button to open theory file
         theory_button = tk.Button(self.root, text="Theory", command=self.open_theory, font=("Times New Roman", 16), width=16, height=2)
@@ -34,6 +39,17 @@ class MainPageGUI:
         # Create button to quit program
         quit_button = tk.Button(self.root, text="Quit", command=self.quit_program, font=("Times New Roman", 16), width=16, height=2)
         quit_button.pack(pady=10)
+
+
+    def whatOS() -> str:
+        os = sys.platform()
+
+        if os == 'Darwin':
+            return 'MacOS'
+        elif os == 'Windows':
+            return 'Windows'
+        else:
+            return 'Linux'
 
     def open_theory(self):
         import theory

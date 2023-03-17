@@ -17,12 +17,14 @@ class FreeFallGUI:
 
         # Create label to display welcome message
         welcome_message = "Welcome to the Free-Fall 15 simulation!"
-        self.welcome_label = tk.Label(self.root, text=welcome_message, font=("Times New Roman", 40, "bold"), fg="yellow", bg="SystemTransparent")
+        self.welcome_label = tk.Label(self.root, text=welcome_message, font=("Times New Roman", 40, "bold"), fg="yellow", bg="#000001")
+        self.welcome_label.config(bg=self.welcome_label['bg'], highlightthickness=0)
+        self.welcome_label.attributes('-alpha', 0.0)
         self.welcome_label.pack(pady=10)
 
         # Create label for instructions
         instructions_title = "Instructions:"
-        self.instructions_title_label = tk.Label(self.root, text=instructions_title, font=("Times New Roman", 35, "bold"), fg="white", bg="SystemTransparent")
+        self.instructions_title_label = tk.Label(self.root, text=instructions_title, font=("Times New Roman", 35, "bold"), fg="white", bg="systemTransparent")
         self.instructions_title_label.pack(pady=50, anchor='w')
 
         # Create label for instructions
@@ -31,7 +33,7 @@ class FreeFallGUI:
                        "- Click next if you've understood it.\n" \
                        "- Try the quiz to test your knowledge.\n" \
                        "- Submit your answers once you are done and you will be directed to another page with your feedbacks."
-        self.instructions_label = tk.Label(self.root, text=instructions, font=("Times New Roman", 25), fg="white", bg="SystemTransparent", justify="left")
+        self.instructions_label = tk.Label(self.root, text=instructions, font=("Times New Roman", 25), fg="white", bg="systemTransparent", justify="left")
         self.instructions_label.pack(anchor='w')
 
         # Create button to advance to simulation
