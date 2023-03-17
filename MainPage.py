@@ -12,33 +12,56 @@ class MainPageGUI:
         bg_image = Image.open("Background.png")
         bg_image = bg_image.resize((self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
         self.bg_photo = ImageTk.PhotoImage(bg_image)
-        bg_label = tk.Label(self.root, image=self.bg_photo)
-        bg_label.place(x=0, y=0, relwidth=1, relheight=1)
-
-        # Create label to display welcome message
-        welcome_message = "Welcome to the Free-Fall 15 simulation!"
-        canvas = tk.Canvas(self.root)
+        canvas = tk.Canvas(self.root, highlightthickness= 0)
         canvas.create_image(0, 0, image = self.bg_photo, anchor ='nw')
-        canvas.create_text(580, 130, text=welcome_message, fill="yellow", font=("Times New Roman", 40, "bold"))
-        canvas.pack(fill="both", expand= True)
+        canvas.pack(fill= "both", expand=True)
+        # bg_label = tk.Label(self.root, image=self.bg_photo)
+        # bg_label.place(x=0, y=0, relwidth=1, relheight=1)
+
+
+        #For centering purposes
+        half_x = self.root.winfo_screenwidth() / 2
+        half_y = self.root.winfo_screenheight() / 2
+
+
+        # Create canvas to display welcome message with a transparent background
+        welcome_message = "Welcome to the Free-Fall 15 simulation!"
+        canvas.create_text(half_x, 50, text=welcome_message, fill="yellow", font=("Times New Roman", 40, "bold"))
+    
+
         # self.welcome_label = tk.Label(self.root, text=welcome_message, font=("Times New Roman", 40, "bold"), fg="Yellow", bg='transparent')
         # self.welcome_label.pack(pady=20)
 
-        # Create button to open theory file
-        theory_button = tk.Button(self.root, text="Theory", command=self.open_theory, font=("Times New Roman", 16), width=16, height=2)
-        theory_button.pack(pady=10)
+    # BUTTON CREATION (Order is weird but it works???)
 
-        # Create button to open simulation file
-        simulation_button = tk.Button(self.root, text="Simulation", command=self.open_simulation, font=("Times New Roman", 16), width=16, height=2)
-        simulation_button.pack(pady=10)
+        button_function = {
+            'Quit' : self.quit_program,
+            'Quiz' : self.quit_program,
+            'Simulation' : self.open_simulation,
+            'Theory' : self.open_theory
+        }
 
-        # Create button to open quiz file
-        quiz_button = tk.Button(self.root, text="Quiz", command=self.open_quiz, font=("Times New Roman", 16), width=16, height=2)
-        quiz_button.pack(pady=10)
+        for button, function in button_function.items():
+            tk.Button(canvas, text = button, command= function, font=("Times New Roman", 16), width=16, height= 2).pack(pady=10, side= "bottom")
 
-        # Create button to quit program
-        quit_button = tk.Button(self.root, text="Quit", command=self.quit_program, font=("Times New Roman", 16), width=16, height=2)
-        quit_button.pack(pady=10)
+
+        # # Create button to quit program
+        # quit_button = tk.Button(canvas, text="Quit", command=self.quit_program, font=("Times New Roman", 16), width=16, height=2)
+        # quit_button.pack(pady=10, side= "bottom")
+
+        # # Create button to open quiz file
+        # quiz_button = tk.Button(canvas, text="Quiz", command=self.open_quiz, font=("Times New Roman", 16), width=16, height=2)
+        # quiz_button.pack(pady=10, side= "bottom")
+
+        # # Create button to open simulation file
+        # simulation_button = tk.Button(canvas, text="Simulation", command=self.open_simulation, font=("Times New Roman", 16), width=16, height=2)
+        # simulation_button.pack(pady=10, side= "bottom")
+
+        # # Create button to open theory file
+        # theory_button = tk.Button(canvas, text="Theory", command=self.open_theory, font=("Times New Roman", 16), width=16, height=2)
+        # theory_button.pack(pady=10, side= "bottom")
+
+       
 
 
     def whatOS() -> str:
