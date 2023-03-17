@@ -18,8 +18,6 @@ class FreeFallGUI:
         # Create label to display welcome message
         welcome_message = "Welcome to the Free-Fall 15 simulation!"
         self.welcome_label = tk.Label(self.root, text=welcome_message, font=("Times New Roman", 40, "bold"), fg="yellow", bg="#000001")
-        self.welcome_label.config(bg=self.welcome_label['bg'], highlightthickness=0)
-        self.welcome_label.attributes('-alpha', 0.0)
         self.welcome_label.pack(pady=10)
 
         # Create label for instructions
