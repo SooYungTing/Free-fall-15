@@ -18,8 +18,8 @@ class MainPageGUI:
 
 
         #For centering purposes
-        half_x = self.root.winfo_screenwidth() / 2
-        half_y = self.root.winfo_screenheight() / 2
+        half_x = self.root.winfo_screenwidth() // 2
+        half_y = self.root.winfo_screenheight() // 2
 
         # Create canvas to display welcome message with a transparent background
         welcome_message = "Welcome to the Free-Fall 15 simulation!"
@@ -29,22 +29,23 @@ class MainPageGUI:
         '''
         A dictionary for all the buttons that's involved in the homepage
         Meaning = {Text appearing on button, function button will use}
-        Note: Order is bottom to top, hence why 'Quit' is the first since it will be at the bottom 
+        Note: Order is top to bottom
+        Therefore: DO NOT CHANGE THE ORDER
         '''
 
         button_function = {
-            'Quit' : self.quit_program,
-            'Quiz' : self.quit_program,
+            'Theory' : self.open_theory,
             'Simulation' : self.open_simulation,
-            'Theory' : self.open_theory
+            'Quiz' : self.quit_program,
+            'Quit' : self.quit_program
         }
 
+        
         for button, function in button_function.items():
-            tk.Button(canvas, text = button, command= function, font=("Times New Roman", 16), width=16, height= 2).pack(pady=10, side= "bottom")
-
-       
-
-
+            tk.Button(canvas, text = button, command= function, font=("Times New Roman", 16), width=16, height= 2).place(x = half_x - 100, y = half_y- 100)
+            half_y += 100
+    
+            
     def whatOS() -> str:
         os = sys.platform()
 
