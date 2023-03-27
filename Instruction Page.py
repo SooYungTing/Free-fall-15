@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import sys
-import MainPage
+
 
 class FreeFallGUI:
     def __init__(self, master):
@@ -56,6 +56,7 @@ class FreeFallGUI:
             return 'Linux'
 
     def open_MainPage(self):
+        import MainPage
         self.root.destroy()
         root = tk.Tk()
         MainPage.MainPageGUI(root)
