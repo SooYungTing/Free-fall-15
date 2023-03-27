@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import sys
-
+import MainPage
 
 class FreeFallGUI:
     def __init__(self, master):
@@ -43,7 +43,7 @@ class FreeFallGUI:
 
         # Create button to advance to simulation
         self.next_button = tk.Button(self.root, text="Next", font=("Times New Roman", 15), command=self.open_MainPage, width=12, height=2)
-        self.next_button.place(x=1270, y=self.root.winfo_screenheight()-100)
+        self.next_button.place(relx=0.95, rely=0.95, anchor='se')
 
     def whatOS() -> str:
         os = sys.platform()
@@ -56,9 +56,10 @@ class FreeFallGUI:
             return 'Linux'
 
     def open_MainPage(self):
-        import MainPage
-        main_page = MainPage.MainPageGUI(self.root)
-        main_page.mainloop()
+        self.root.destroy()
+        root = tk.Tk()
+        MainPage.MainPageGUI(root)
+        root.mainloop()
 
 if __name__ == "__main__":
     root = tk.Tk()
