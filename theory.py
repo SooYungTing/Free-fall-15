@@ -65,11 +65,6 @@ class TheoryGUI:
                   "- h is the height (m)"
         canvas.create_text(half_x/2.25, half_y/0.71, text=theory3, fill="white", font=("Times New Roman", 25))
 
-        # Create label for theory 4 title
-        theory4_title = "Terminal velocity:"
-        canvas.create_text(position_x, position_y, text=theory4_title, fill="white",
-                           font=("Times New Roman", 35, "bold"))
-
         # Create button to go back to MainPage
         self.back_button = tk.Button(self.root, text="Back", font=("Times New Roman", 15), command=self.open_MainPage,
                                      width=12, height=2)
