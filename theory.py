@@ -29,7 +29,7 @@ class TheoryGUI:
         position_y = self.root.winfo_screenheight() // 5
 
         # Create label for theory 1 title
-        theory1_title = "Newton's Second Law:"
+        theory1_title = "\tNewton's Second Law:"
         canvas.create_text(position_x/0.5, position_y, text=theory1_title, fill="white",
                            font=("Times New Roman", 35, "bold"))
 
@@ -41,7 +41,7 @@ class TheoryGUI:
         canvas.create_text(half_x/3, half_y / 1.6, text=theory1, fill="white", font=("Times New Roman", 25))
 
         # Create label for theory 2 title
-        theory2_title = "Kinetic energy:"
+        theory2_title = "\tKinetic energy:"
         canvas.create_text(position_x/0.7, position_y/0.5, text=theory2_title, fill="white",
                            font=("Times New Roman", 35, "bold"))
 
@@ -53,7 +53,7 @@ class TheoryGUI:
         canvas.create_text(half_x/3, half_y, text=theory2, fill="white", font=("Times New Roman", 25))
 
         # Create label for theory 3 title
-        theory3_title = "Gravitational potential energy: "
+        theory3_title = "\tGravitational potential energy: "
         canvas.create_text(position_x/0.38, position_y/0.34, text=theory3_title, fill="white",
                            font=("Times New Roman", 35, "bold"))
 

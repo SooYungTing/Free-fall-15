@@ -29,7 +29,7 @@ class Theory2GUI:
         position_y = self.root.winfo_screenheight() // 5
 
         # Create label for theory 4 title
-        theory4_title = "Terminal velocity:"
+        theory4_title = "\tTerminal velocity:"
         canvas.create_text(position_x/0.63, position_y, text=theory4_title, fill="white",
                            font=("Times New Roman", 35, "bold"))
 
@@ -44,7 +44,7 @@ class Theory2GUI:
         canvas.create_text(half_x/2.5, half_y/1.5, text=theory4, fill="white", font=("Times New Roman", 25))
 
         # Create label for theory 5 title
-        theory5_title = "Air pressure"
+        theory5_title = "\tAir pressure"
         canvas.create_text(position_x/0.9, position_y/0.42, text=theory5_title, fill="white",
                            font=("Times New Roman", 35, "bold"))
 
@@ -57,7 +57,7 @@ class Theory2GUI:
         canvas.create_text(half_x/2.67, half_y/0.85, text=theory5, fill="white", font=("Times New Roman", 25))
 
         # Create label for theory 6 title
-        theory6_title = "Ideal Gas Law:"
+        theory6_title = "\tIdeal Gas Law:"
         canvas.create_text(position_x/0.75, position_y/0.29, text=theory6_title, fill="white",
                            font=("Times New Roman", 35, "bold"))
 
