@@ -35,7 +35,7 @@ class MainPageGUI:
         button_function = {
             'Theory' : self.open_theory,
             'Simulation' : self.open_simulation,
-            'Quiz' : self.quit_program,
+            'Quiz' : self.open_quiz,
             'Quit' : self.quit_program
         }
 
@@ -44,7 +44,6 @@ class MainPageGUI:
             tk.Button(canvas, text = button, command= function, font=("Times New Roman", 16), width=16, height= 2).place \
                 (x = half_x - 100, y = half_y- 100)
             half_y += 100
-
 
     def whatOS() -> str:
         os = sys.platform()
@@ -58,7 +57,9 @@ class MainPageGUI:
 
     def open_theory(self):
         import theory
-        theory = theory.TheoryGUI(self.root)
+        self.root.destroy()
+        root = tk.Tk()
+        theory = theory.TheoryGUI(root)
         theory.mainloop()
 
     def open_simulation(self):
@@ -66,6 +67,9 @@ class MainPageGUI:
 
     def open_quiz(self):
         import quiz
+        self.root.destroy()
+        quiz = quiz.FreefallQuiz()
+        quiz.mainloop()
 
     def quit_program(self):
         self.root.destroy()
