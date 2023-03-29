@@ -32,6 +32,14 @@ class FreefallQuiz:
         canvas.create_image(0, 0, image=self.bg_photo, anchor='nw')
         canvas.pack(fill="both", expand=True)
 
+        # For centering purposes
+        half_x = self.window.winfo_screenwidth() // 2
+        half_y = self.window.winfo_screenheight() // 2
+
+        # Create label to display title message
+        welcome_message = "Quiz"
+        canvas.create_text(half_x, 50, text=welcome_message, fill="yellow", font=("Times New Roman", 40, "bold"))
+
         self.create_widgets()
 
     def create_widgets(self):
@@ -39,12 +47,12 @@ class FreefallQuiz:
         self.answer_frames = []
         self.answer_radios = []
         self.answer_vars = []
+        question_frame = tk.Frame(self.window)
 
         for i in range(len(self.questions)):
-            question_frame = tk.Frame(self.window)
-            question_frame.pack(side="top", padx=10, pady=10, anchor="w")
+            question_frame.pack(side="top", padx=10, pady=10, anchor="w") #if removed there is no words/text
 
-            question_label = tk.Label(question_frame, text=self.questions[i])
+            question_label = tk.Label(question_frame, text=self.questions[i], font=("Times New Roman", 15))
             question_label.pack(side="top", anchor="w")
             self.question_labels.append(question_label)
 
@@ -56,13 +64,14 @@ class FreefallQuiz:
             self.answer_frames.append(answer_frame)
 
             for j in range(len(self.choices[i])):
-                answer_radio = tk.Radiobutton(answer_frame, text=self.choices[i][j], variable=answer_var,
+                answer_radio = tk.Radiobutton(answer_frame, text=self.choices[i][j], font=("Times New Roman", 15), variable=answer_var,
                                               value=chr(65 + j))
-                answer_radio.pack(side="top", padx=10, pady=2, anchor="w")
+                answer_radio.pack(side="top", padx=10, pady=2, anchor="nw")
                 self.answer_radios.append(answer_radio)
 
-        submit_button = tk.Button(self.window, text="Submit", command=self.check_answers)
-        submit_button.pack(side="top", padx=10, pady=10, anchor="e")
+        self.submit_button = tk.Button(self.window, text="Submit", font=("Times New Roman", 15), command=self.check_answers,
+                                     width=12, height=2)
+        self.submit_button.pack(side="top", padx=10, pady=10, anchor="se")
 
     def check_answers(self):
         score = 0
@@ -102,7 +111,6 @@ class FreefallQuiz:
 
     def run(self):
         self.window.mainloop()
-
 
 if __name__ == "__main__":
     quiz = FreefallQuiz()
