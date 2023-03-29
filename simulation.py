@@ -7,14 +7,92 @@ root = tk.Tk()
 root.attributes("-fullscreen", True)
 root.title("Freefall Object Simulation")
 
-img = Image.open("Simulation Background.png")
-photo = ImageTk.PhotoImage(img)
+# img = Image.open("Simulation Background.png")
+# photo = ImageTk.PhotoImage(img)
+
+
+
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
-label = tk.Label(root, image=photo)
+inputFrame_bg = "#fdfdb7"
+outputFrame_bg_sky = "#87cfea"
+outputFrame_bg_land = "#90ee90"
+textBg = "#306f9d"
 
-label.place(x=0, y=0, width=screen_width, height=screen_height)
+inputFrame = tk.Frame(root, highlightbackground= "black", highlightthickness=1, bg=inputFrame_bg)
+inputFrame.place(x=screen_width // 10 + screen_width // 2, y= 0 , width=screen_width, height=screen_height)
+
+outputFrame_sky = tk.Frame(root, bg=outputFrame_bg_sky)
+outputFrame_sky.place(x=0, y=0, width= screen_width // 10 + screen_width // 2, height= screen_height // 1.6)
+
+outputFrame_land = tk.Frame(root, bg=outputFrame_bg_land)
+outputFrame_land.place(x=0, y=screen_height // 1.6, width= screen_width // 10 + screen_width // 2, height= screen_height)
+
+inputText = tk.Label(inputFrame, text="Input", font=("Times New Roman", "23", "bold"), bg=inputFrame_bg, fg=textBg)
+inputText.place(relx= 0.185, rely= 0.010)
+
+parachute_box = tk.Frame(inputFrame, highlightbackground="black", highlightthickness=1)
+parachute_box.place(relx=0.0525, rely= 0.1, relwidth= 0.3, relheight= 0.14)
+
+image = Image.open("parachute-hi.png")
+
+#small parachute
+image2 = image.resize((60, 60))
+photo2 = ImageTk.PhotoImage(image2)
+sm_parachute = tk.Button(parachute_box, relief='ridge')
+sm_parachute.photo = photo2
+sm_parachute.config(image=photo2)
+sm_parachute.grid(row=2, column= 2, padx=50)
+
+#large parachute
+image1 = image.resize((100, 100))
+photo1 = ImageTk.PhotoImage(image1)
+lg_parachute = tk.Button(parachute_box, relief="ridge")
+lg_parachute.photo = photo1
+lg_parachute.config(image=photo1)
+# lg_parachute.place(relx=0.1, rely=0.12)
+# label1 = tk.Label(parachute_box)
+# label1.place(relx=0.1)
+lg_parachute.grid(row=2, column=1, padx=90, pady= 20)
+
+#temperature scale
+temp_slider = tk.Scale(inputFrame, from_=20, to=-20, orient='vertical', resolution=0.5, sliderlength=50, length=400, width= 50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7")
+temp_label = tk.Label(inputFrame, text="Temperature (°C)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="black")
+
+temp_slider.place(relx= 0.03, rely=0.35)
+temp_label.place(relx=0.025, rely=0.32 )  
+
+
+#height scale
+height_slider = tk.Scale(inputFrame, from_=1000, to=100, orient='vertical', resolution=1,  sliderlength= 50, length=400, width=50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7")
+height_label = tk.Label(inputFrame, text="Height (m)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="black")
+# label="Height (m)",
+height_slider.place(relx=0.11, rely=0.35)
+height_label.place(relx=0.12, rely=0.32 )  
+
+# Object type
+object_var = tk.StringVar(value="Object")
+object_menu = tk.OptionMenu(inputFrame, object_var, "Marshmallow", "Brick", "Car")
+object_menu.config(font=('Times New Roman', 18))
+object_menu.place(relx=0.24, rely=0.36)
+
+# Planet Type
+planet_var = tk.StringVar(value="Earth")
+planet_menu = tk.OptionMenu(inputFrame, planet_var, "Mercury", "Venus", "Earth", "Mars", "Moon")
+planet_menu.config(font=('Times New Roman', 18))
+planet_menu.place(relx=0.24, rely=0.46)
+
+# Rotation Button
+rotation_button = tk.Button(inputFrame, text="Rotate 90°", font=("Times New Roman", 18))
+rotation_button.place(relx=0.24, rely=0.56)
+
+# Disable Air Resistance Button
+no_air_res_button = tk.Button(inputFrame, text="Disable Air Resistance", font=("Times New Roman", 18))
+no_air_res_button.place(relx=0.24, rely=0.66)
+
+
+
 
 # Define constants
 g = {
@@ -33,19 +111,18 @@ object_label.grid(row=0, column=0)
 object_menu = tk.OptionMenu(root, object_var, "Marshmallow", "Brick", "Car")
 object_menu.grid(row=0, column=1)
 
-image1 = Image.open("parachute-hi.png")
-image1 = image1.resize((100, 100))
+image = Image.open("parachute-hi.png")
+image1 = image.resize((100, 100))
 photo1 = ImageTk.PhotoImage(image1)
 button = tk.Button(root, image=photo1)
 label1 = tk.Label()
 label1.grid()
-button.grid(row=1, column=0)
+button.grid(row=1, column=1)
 
-image2 = Image.open("parachute-hi.png")
-image2 = image2.resize((60, 60))
+image2 = image.resize((60, 60))
 photo2 = ImageTk.PhotoImage(image2)
 button = tk.Button(root, image=photo2)
-button.grid(row=1, column=1)
+button.grid(row=1, column=0)
 
 height_slider = tk.Scale(root, from_=1000, to=100, orient='vertical', resolution=0.1, label="Height (m)")
 height_slider.grid()
@@ -94,9 +171,9 @@ impact_output.grid(row=10, column=1)
 def calculate_results():
 # Get user inputs
     obj = object_var.get()
-    air_res = air_resistance_var.get()
-    h = int(height_var.get())
-    temp = int(temperature_var.get()) + 273.15
+    air_res = 10
+    h = 100
+    temp = 100 + 273.15
     pl = planet_var.get()
 
 # Define air density based on temperature
@@ -149,7 +226,7 @@ def calculate_results():
                               f"Kinetic energy: {ke:.2f} J\n"
                               f"Gravitational potential energy: {gpe:.2f} J\n"
                               f"Impact force: {impact_force:.2f} N")
-    window = Tk()
+    window = tk.Tk()
     window.title("Freefall Object Simulation")
 
 
