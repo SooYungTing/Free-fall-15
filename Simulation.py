@@ -47,9 +47,9 @@ photo2 = ImageTk.PhotoImage(image2)
 button = tk.Button(root, image=photo2)
 button.grid(row=1, column=1)
 
-height_slider = tk.Scale(root, from_=20, to=-20, orient='vertical', resolution=0.1, label="Height (m)")
+height_slider = tk.Scale(root, from_=1000, to=100, orient='vertical', resolution=0.1, label="Height (m)")
 height_slider.grid()
-temp_slider = tk.Scale(root, from_=1000, to=100, orient='vertical', resolution=0.1, label="Temperature (°C)")
+temp_slider = tk.Scale(root, from_=20, to=-20, orient='vertical', resolution=0.1, label="Temperature (°C)")
 temp_slider.grid()
 
 planet_var = tk.StringVar(value="Earth")
