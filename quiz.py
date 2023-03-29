@@ -32,6 +32,14 @@ class FreefallQuiz:
         canvas.create_image(0, 0, image=self.bg_photo, anchor='nw')
         canvas.pack(fill="both", expand=True)
 
+        # For centering purposes
+        half_x = self.window.winfo_screenwidth() // 2
+        half_y = self.window.winfo_screenheight() // 2
+
+        # Create label to display title message
+        welcome_message = "Quiz"
+        canvas.create_text(half_x, 50, text=welcome_message, fill="yellow", font=("Times New Roman", 40, "bold"))
+
         self.create_widgets()
 
     def create_widgets(self):
