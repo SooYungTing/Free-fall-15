@@ -229,7 +229,7 @@ back_button = tk.Button(inputFrame, text="Back", font=("Times New Roman", 20), b
 back_button.place(relx=0.21, rely= 0.94, relwidth=0.08)
 
 #Start Button
-start_button = tk.Button(inputFrame, text="Start", font=("Times New Roman", 20), bg="#d7d7d7")
+start_button = tk.Button(inputFrame, text="Start", font=("Times New Roman", 20), bg="#d7d7d7", command=start_command)
 start_button.place(relx=0.3, rely= 0.94, relwidth=0.08)
 
 
