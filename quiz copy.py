@@ -100,15 +100,16 @@ class FreefallQuiz:
         if os == 'MacOS':
             return 'SystemTransparent'
         elif os == 'Windows':
-            return 'SystemButtonFace'
+            return 'blank'
         else:
             return 'white'
 
-    def whatOS(self):
-        os = sys.platform
-        if os == 'darwin':
+    def whatOS() -> str:
+        os = sys.platform()
+
+        if os == 'Darwin':
             return 'MacOS'
-        elif os == 'win32':
+        elif os == 'Windows':
             return 'Windows'
         else:
             return 'Linux'
