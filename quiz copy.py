@@ -62,7 +62,7 @@ class FreefallQuiz:
                 canvas.create_text(40, 160 + 130 * i + 40 * j, text=answer_text, fill="white",
                                    font=("Times New Roman", 15), anchor='nw')
                 answer_radio_button = tk.Radiobutton(canvas, variable=answer_var, value=chr(65+j),
-                                                     bg='SystemTransparent')
+                                                     bg=self.get_bg_color())
                 answer_radio_button.place(x=18, y=153 + 130 * i + 40 * j + 5)
                 self.answer_radios.append(answer_radio_button)
 
@@ -95,12 +95,20 @@ class FreefallQuiz:
             no_topics_label = tk.Label(results_window, text="Great job! You don't need to improve on anything.")
             no_topics_label.pack(padx=10, pady=10)
 
-    def whatOS() -> str:
-        os = sys.platform()
-
-        if os == 'Darwin':
-            return 'MacOS'
+    def get_bg_color(self):
+        os = self.whatOS()
+        if os == 'MacOS':
+            return 'SystemTransparent'
         elif os == 'Windows':
+            return 'SystemButtonFace'
+        else:
+            return 'white'
+
+    def whatOS(self):
+        os = sys.platform
+        if os == 'darwin':
+            return 'MacOS'
+        elif os == 'win32':
             return 'Windows'
         else:
             return 'Linux'
