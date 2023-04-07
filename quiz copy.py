@@ -95,24 +95,24 @@ class FreefallQuiz:
             no_topics_label = tk.Label(results_window, text="Great job! You don't need to improve on anything.")
             no_topics_label.pack(padx=10, pady=10)
 
+    def whatOS(self):
+        if sys.platform.startswith('darwin'):
+            return 'Mac'
+        elif sys.platform.startswith('win'):
+            return 'Windows'
+        elif sys.platform.startswith('linux'):
+            return 'Linux'
+        else:
+            return 'Unknown'
+
     def get_bg_color(self):
         os = self.whatOS()
-        if os == 'MacOS':
+        if os == 'Mac':
             return 'SystemTransparent'
         elif os == 'Windows':
-            return 'blank'
+            return 'Blank'
         else:
             return 'white'
-
-    def whatOS() -> str:
-        os = sys.platform()
-
-        if os == 'Darwin':
-            return 'MacOS'
-        elif os == 'Windows':
-            return 'Windows'
-        else:
-            return 'Linux'
 
     def run(self):
         self.window.mainloop()
