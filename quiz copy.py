@@ -59,8 +59,12 @@ class FreefallQuiz:
 
             for j in range(len(self.choices[i])):
                 answer_text = self.choices[i][j]
-                canvas.create_text(40, 160 + 130 * i + 40 * j, text=answer_text, fill="white",
-                                   font=("Times New Roman", 15), anchor='nw')
+                if self.whatOS() == 'Mac':
+                    canvas.create_text(40, 160 + 130 * i + 40 * j, text=answer_text, fill="white",
+                                       font=("Times New Roman", 15), anchor='nw')
+                else:
+                    canvas.create_text(50, 160 + 130 * i + 40 * j, text=answer_text, fill="white",
+                                       font=("Times New Roman", 15), anchor='nw')
                 answer_radio_button = tk.Radiobutton(canvas, variable=answer_var, value=chr(65+j),
                                                      bg=self.get_bg_color())
                 answer_radio_button.place(x=18, y=153 + 130 * i + 40 * j + 5)
@@ -107,12 +111,7 @@ class FreefallQuiz:
 
     def get_bg_color(self):
         os = self.whatOS()
-        if os == 'Mac':
-            return 'SystemTransparent'
-        elif os == 'Windows':
-            return 'Blank'
-        else:
-            return 'white'
+        return 'SystemTransparent' if os == 'Mac' else 'black'
 
     def run(self):
         self.window.mainloop()
