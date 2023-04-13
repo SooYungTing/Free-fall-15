@@ -29,10 +29,7 @@ class FreefallQuiz:
         self.create_widgets()
 
     def create_widgets(self):
-        self.question_labels = []
-        self.answer_frames = []
-        self.answer_radios = []
-        self.answer_vars = []
+        self.question_labels, self.answer_frames, self.answer_radios, self.answer_vars = [], [], [], []
 
         screen_width = self.window.winfo_screenwidth()
         screen_height = self.window.winfo_screenheight()
@@ -47,32 +44,29 @@ class FreefallQuiz:
 
         half_x = self.window.winfo_screenwidth() // 2
 
-        welcome_message = "Quiz"
-        canvas.create_text(half_x, 50, text=welcome_message, fill="yellow", font=("Times New Roman", 40, "bold"))
+        canvas.create_text(half_x, 50, text="Quiz", fill="yellow", font=("Times New Roman", 40, "bold"))
 
-        for i in range(len(self.questions)):
-            question_text = self.questions[i]
-            canvas.create_text(10, 130 + 130 * i, text=question_text, fill="white",
-                               font=("Times New Roman", 20, "bold"), anchor='nw')
+        for i, question in enumerate(self.questions):
             answer_var = tk.StringVar()
+            canvas.create_text(10, 130 + 130 * i, text=question, fill="white",
+                               font=("Times New Roman", 20, "bold"), anchor='nw')
             self.answer_vars.append(answer_var)
 
-            for j in range(len(self.choices[i])):
-                answer_text = self.choices[i][j]
-                if self.whatOS() == 'Mac':
-                    canvas.create_text(40, 160 + 130 * i + 40 * j, text=answer_text, fill="white",
-                                       font=("Times New Roman", 15), anchor='nw')
-                else:
-                    canvas.create_text(50, 160 + 130 * i + 40 * j, text=answer_text, fill="white",
-                                       font=("Times New Roman", 15), anchor='nw')
+            for j, choice in enumerate(self.choices[i]):
+                answer_text = choice
+                text_position = (40, 160) if self.whatOS() == 'Mac' else (50, 160)
+                canvas.create_text(text_position[0], text_position[1] + 130 * i + 40 * j, text=answer_text, fill="white",
+                                   font=("Times New Roman", 15), anchor='nw')
                 answer_radio_button = tk.Radiobutton(canvas, variable=answer_var, value=chr(65+j),
                                                      bg=self.get_bg_color())
                 answer_radio_button.place(x=18, y=153 + 130 * i + 40 * j + 5)
                 self.answer_radios.append(answer_radio_button)
 
         self.submit_button = tk.Button(canvas, text="Submit", font=("Times New Roman", 15),
-                                   command=self.check_answers, width=12, height=2)
+                                       command=self.check_answers, width=12, height=2)
         self.submit_button.pack(side="bottom", padx=10, pady=10, anchor="se")
+
+
     def check_answers(self):
         score = 0
         improvement_topics = []
@@ -89,15 +83,10 @@ class FreefallQuiz:
         results_window = tk.Toplevel(self.window)
         results_window.title("Quiz Results")
 
-        score_label = tk.Label(results_window, text=f"Total Marks: {score}/{len(self.questions)}")
-        score_label.pack(padx=10, pady=10)
-
-        if improvement_topics:
-            topics_label = tk.Label(results_window, text=f"Topics to improve: {''.join(improvement_topics)}")
-            topics_label.pack(padx=10, pady=10)
-        else:
-            no_topics_label = tk.Label(results_window, text="Great job! You don't need to improve on anything.")
-            no_topics_label.pack(padx=10, pady=10)
+        tk.Label(results_window, text=f"Total Marks: {score}/{len(self.questions)}").pack(padx=10, pady=10)
+            
+        improvement_text = f"Topics to improve:{''.join(improvement_topics)}" if improvement_topics else "Great job! You don't need to improve on anything."
+        tk.Label(results_window, text=improvement_text).pack(padx=10, pady=10)
 
     def whatOS(self):
         if sys.platform.startswith('darwin'):
@@ -111,7 +100,7 @@ class FreefallQuiz:
 
     def get_bg_color(self):
         os = self.whatOS()
-        return 'SystemTransparent' if os == 'Mac' else 'black'
+        return 'SystemTransparent' if os == 'Mac' else '#011547'
 
     def run(self):
         self.window.mainloop()
