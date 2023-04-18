@@ -64,14 +64,14 @@ class MainPageGUI:
 
     def open_simulation(self):
         self.root.destroy()
-        import simulationCopy
+        import simulation
         simulation.mainloop()
 
     def open_quiz(self):
         import quiz
         self.root.destroy()
         quiz = quiz.FreefallQuiz()
-        quiz.mainloop()
+        quiz.mainloop()g
 
     def quit_program(self):
         self.root.destroy()

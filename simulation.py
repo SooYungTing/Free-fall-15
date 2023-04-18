@@ -1,6 +1,7 @@
 import math
 import tkinter as tk
-from tkinter import LabelFrame
+from tkinter import LabelFrame, messagebox
+import tkinter.messagebox
 from PIL import Image, ImageTk
 
 root = tk.Tk()
@@ -10,6 +11,162 @@ root.title("Freefall Object Simulation")
 # img = Image.open("Simulation Background.png")
 # photo = ImageTk.PhotoImage(img)
 
+# Logic
+
+# Logic
+
+# Define constants
+global Cd, ang, temp, h, pl
+Cd = 1.0
+ang = 0
+impact_time = 0
+g = {
+    "Mercury": 3.7,
+    "Venus": 8.87,
+    "Earth": 9.81,
+    "Mars": 3.71,
+    "Moon": 1.62
+}
+R = 287.058  # Specific gas constant of dry air in J/(kg*K)
+
+#Get inputs
+def calcImpact_time():
+    global impact_time
+    impact_time = v0 / g[pl]
+
+
+def getInput():
+    global obj, h, temp, pl, obj_weight
+    obj = obj = object_var.get()
+    h = int(height_slider.get())
+    temp = int(temp_slider.get()) + 273.15
+    pl = planet_var.get()
+    object_validation()
+
+#Object Validation
+def object_validation():
+    if obj not in ("Marshmallow", "Car", "Brick"):
+        tkinter.messagebox.showerror(title='Object Error', message="No chosen object: Select the type of objects available before proceeding")
+    else:
+        global obj_weight, obj_diameter
+        if obj == "Marshmallow":
+            obj_weight = 0.02 * g[pl]
+            obj_diameter = 0.05
+        elif obj == "Brick":
+            obj_weight = 2.07 * g[pl]
+            obj_diameter = 0.2
+        elif obj == "Car":
+            obj_weight = 1200 * g[pl]
+            obj_diameter = 1.5
+
+# Define air density based on temperature
+def getAirPressure():
+    global rho_air
+    P = 101325 * math.exp(-0.00012 * h)  # Define air pressure based on location and altitude
+    rho_air = P / (R * temp)
+
+def getGPE():
+    # Calculate initial velocity and gravitational potential energy
+    global v0, m, gpe
+    v0 = math.sqrt(2 * g[pl] * h)
+    m = obj_weight / g[pl]
+    gpe = obj_weight * h
+
+
+def getAcceleration():
+    global acc
+    if impact_time == 0:
+        acc = 0
+    else:
+        acc = v0 / impact_time
+
+def getKE():
+    # Calculate terminal velocity and kinetic energy
+    global terminal_v, ke
+    A = math.pi * (obj_diameter / 2) ** 2
+    terminal_v = math.sqrt((2 * m * g[pl]) / (Cd * rho_air * A))
+    ke = 0.5 * m * terminal_v ** 2
+
+def getImpactForce():
+    global impact_force, impact_time
+    # Calculate impact force
+    if ang == 90:
+        impact_time = v0 / g[pl] # Use initial velocity instead of terminal velocity
+        impact_force = (m * g[pl] + ke / terminal_v) / impact_time
+    else:
+        impact_force = m * g[pl]
+
+#Button Functions
+def sm_parachute_command():
+    Cd = 0.5
+    tkinter.messagebox.showinfo(title="Parachute Choice", message="Small parachute has been selected")
+
+
+def lg_parachute_command():
+    Cd = 1.0
+    tkinter.messagebox.showinfo(title="Parachute Choice", message="Large parachute has been selected")
+
+def disable_air_resistance_command():
+    Cd = 1e-16
+    tkinter.messagebox.showinfo(title="Parachute Choice", message="Air resistance has been disabled")
+
+def open_instruction_page():
+    instruction_window = tk.Toplevel(root)
+    instruction_window.title("Instruction Guide")
+    instruction_window.geometry("550x150")
+
+    instruction_label = tk.Label(instruction_window, text=
+                       "1. Pick an air resistance by clicking onto either parachutes.\n" \
+                       "2. Adjust slider to change the temperature of air and distance of height the object falls.\n"                                  
+                       "3. Select an Object.\n" \
+                       "4. Select a Planet to change the gravitational acceleration of the object.\n" \
+                       "5. Click on the 'Rotate 90° button to rotate the object 90°.\n" \
+                       "6. Click on the 'Disable Air Resistance' button to disable air resistance.\n" \
+                       "7. Click on the 'Start' button to view the animation.", font= ("Calibri", 11))
+
+    instruction_label.pack()
+
+def rotation_command():
+    ang += 90
+    if ang == 360:
+        ang = 0
+
+def reset_command():
+    Cd = 0
+    ang = 0
+    temp = 0
+    h = 100
+    pl = 0
+    height_slider.set(550)
+    temp_slider.set(0.0)
+    object_var.set("Object")
+    planet_var.set("Earth")
+
+
+def back_command():
+    root.destroy()
+    new_root=tk.Tk()
+    import MainPage
+    MainPage.MainPageGUI(new_root)
+    new_root.mainloop()
+
+
+def start_command():
+    global v0
+    getInput()
+    getGPE()
+    v0 = math.sqrt(2 * g[pl] * h)
+    calcImpact_time()
+    object_validation()
+    getAirPressure()
+    getAcceleration()
+    getKE()
+    getImpactForce()
+    initial_velocity_value.config(text=f"{v0:.2f}")
+    acc_value.config(text=f"{acc:.2f}")
+    ke_value.config(text=f"{ke:.2f}")
+    gpe_value.config(text=f"{gpe:.2f}")
+    impact_force_value.config(text=f"{impact_force:.2f}")
 
 
 screen_width = root.winfo_screenwidth()
@@ -31,6 +188,9 @@ outputFrame_land.place(x=0, y=screen_height // 1.6, width= screen_width // 10 + 
 
 inputText = tk.Label(inputFrame, text="Input", font=("Times New Roman", "23", "bold"), bg=inputFrame_bg, fg=textBg)
 inputText.place(relx= 0.185, rely= 0.010)
+
+outputText = tk.Label(outputFrame_sky, text="Output", font=("Times New Roman", "23", "bold"), bg=outputFrame_bg_sky, fg=textBg)
+outputText.place(relx= 0.43, rely= 0.020)
 
 parachute_box = tk.Frame(inputFrame, highlightbackground="black", highlightthickness=1)
 parachute_box.place(relx=0.0525, rely= 0.1, relwidth= 0.3, relheight= 0.14)
@@ -58,206 +218,118 @@ lg_parachute.grid(row=2, column=1, padx=90, pady= 20)
 
 #temperature scale
 temp_slider = tk.Scale(inputFrame, from_=20, to=-20, orient='vertical', resolution=0.5, sliderlength=50, length=400, width= 50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7")
+temp_slider.set(0.0)
 temp_label = tk.Label(inputFrame, text="Temperature (°C)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="black")
 
 temp_slider.place(relx= 0.03, rely=0.35)
-temp_label.place(relx=0.025, rely=0.32 )  
+temp_label.place(relx=0.025, rely=0.32 )
 
 
 #height scale
 height_slider = tk.Scale(inputFrame, from_=1000, to=100, orient='vertical', resolution=1,  sliderlength= 50, length=400, width=50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7")
+height_slider.set(550)
 height_label = tk.Label(inputFrame, text="Height (m)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="black")
 # label="Height (m)",
 height_slider.place(relx=0.11, rely=0.35)
-height_label.place(relx=0.12, rely=0.32 )  
+height_label.place(relx=0.12, rely=0.32 )
 
 # Object type
 object_var = tk.StringVar(value="Object")
 object_menu = tk.OptionMenu(inputFrame, object_var, "Marshmallow", "Brick", "Car")
 object_menu.config(font=('Times New Roman', 18))
-object_menu.place(relx=0.24, rely=0.36)
+object_menu.place(relx=0.22, rely=0.36, relwidth=0.15)
 
 # Planet Type
 planet_var = tk.StringVar(value="Earth")
 planet_menu = tk.OptionMenu(inputFrame, planet_var, "Mercury", "Venus", "Earth", "Mars", "Moon")
 planet_menu.config(font=('Times New Roman', 18))
-planet_menu.place(relx=0.24, rely=0.46)
+planet_menu.place(relx=0.22, rely=0.46, relwidth=0.15)
 
 # Rotation Button
 rotation_button = tk.Button(inputFrame, text="Rotate 90°", font=("Times New Roman", 18))
-rotation_button.place(relx=0.24, rely=0.56)
+rotation_button.place(relx=0.22, rely=0.56, relwidth=0.15)
 
 # Disable Air Resistance Button
 no_air_res_button = tk.Button(inputFrame, text="Disable Air Resistance", font=("Times New Roman", 18))
-no_air_res_button.place(relx=0.24, rely=0.66)
+no_air_res_button.place(relx=0.22, rely=0.66, relwidth=0.15)
+
+# Instruction Page Button
+instruction_page_button = tk.Button(inputFrame, text="Instruction Guide", font=("Times New Roman", 18), command=open_instruction_page)
+instruction_page_button.place(relx=0.22, rely=0.76, relwidth=0.15)
+
+#Reset Button
+reset_button = tk.Button(inputFrame, text="Reset", font=("Times New Roman", 20), bg="#d7d7d7", command=reset_command)
+reset_button.place(relx=0.02, rely= 0.94, relwidth=0.08)
+
+#Back Button
+back_button = tk.Button(inputFrame, text="Back", font=("Times New Roman", 20), bg="#d7d7d7", command=back_command)
+back_button.place(relx=0.21, rely= 0.94, relwidth=0.08)
+
+#Start Button
+start_button = tk.Button(inputFrame, text="Start", font=("Times New Roman", 20), bg="#d7d7d7", command=start_command)
+start_button.place(relx=0.3, rely= 0.94, relwidth=0.08)
 
 
+#Outputs
 
+#Initial Velocity
+initial_velocity_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
+text = tk.Label(initial_velocity_frame, text="Velocity:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+initial_velocity_value_frame = tk.Frame(initial_velocity_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+initial_velocity_value = tk.Label(initial_velocity_value_frame, text="0.00", font=("Times New Roman", 18))
+unit = tk.Label(initial_velocity_frame, text=" m/s", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+text.grid(row=1, column=0)
+initial_velocity_value_frame.grid(row=1, column=1)
+initial_velocity_value.pack()
+unit.grid(row=1, column=2)
+initial_velocity_frame.place(relx=0.03, rely= 0.25, relheight= 0.033, relwidth=0.23)
 
-# Define constants
-g = {
-    "Mercury": 3.7,
-    "Venus": 8.87,
-    "Earth": 9.81,
-    "Mars": 3.71,
-    "Moon": 1.62
-}
-R = 287.058  # Specific gas constant of dry air in J/(kg*K)
+#Kinetic Energy
+ke_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
+text = tk.Label(ke_frame, text="Kinetic Energy:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+ke_value_frame = tk.Frame(ke_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+ke_value = tk.Label(ke_value_frame, text="0.00", font=("Times New Roman", 18))
+unit = tk.Label(ke_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+text.grid(row=1, column=0)
+ke_value_frame.grid(row=1, column=1)
+ke_value.pack()
+unit.grid(row=1, column=2)
+ke_frame.place(relx=0.35, rely= 0.25, relheight= 0.033, relwidth=0.268)
 
-# Create the input fields
-object_var = tk.StringVar(value="Marshmallow")
-object_label = tk.Label(root, text="Object Type:")
-object_label.grid(row=0, column=0)
-object_menu = tk.OptionMenu(root, object_var, "Marshmallow", "Brick", "Car")
-object_menu.grid(row=0, column=1)
+#Impact Force
+impact_force_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
+text = tk.Label(impact_force_frame, text="Impact Force:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+impactforce_value_frame = tk.Frame(impact_force_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+impact_force_value = tk.Label(impactforce_value_frame, text="0.00", font=("Times New Roman", 18))
+unit = tk.Label(impact_force_frame, text=" N", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+text.grid(row=1, column=0)
+impactforce_value_frame.grid(row=1, column=1)
+impact_force_value.pack()
+unit.grid(row=1, column=2)
+impact_force_frame.place(relx=0.7, rely= 0.25, relheight= 0.033, relwidth=0.265)
 
-image = Image.open("parachute-hi.png")
-image1 = image.resize((100, 100))
-photo1 = ImageTk.PhotoImage(image1)
-button = tk.Button(root, image=photo1)
-label1 = tk.Label()
-label1.grid()
-button.grid(row=1, column=1)
+#Gravitational Potential Energy
+gpe_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
+text = tk.Label(gpe_frame, text="G.P.E:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+gpe_value_frame = tk.Frame(gpe_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+gpe_value = tk.Label(gpe_value_frame, text="0.00", font=("Times New Roman", 18))
+unit = tk.Label(gpe_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+text.grid(row=2, column=0)
+gpe_value_frame.grid(row=2, column=1)
+gpe_value.pack()
+unit.grid(row=2, column=2)
+gpe_frame.place(relx=0.434, rely= 0.3, relheight= 0.033, relwidth=0.139)
 
-image2 = image.resize((60, 60))
-photo2 = ImageTk.PhotoImage(image2)
-button = tk.Button(root, image=photo2)
-button.grid(row=1, column=0)
+#Acceleration
+acceleration_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
+text = tk.Label(acceleration_frame, text="Acceleration:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+acc_value_frame = tk.Frame(acceleration_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+acc_value = tk.Label(acc_value_frame, text="0.00", font=("Times New Roman", 18))
+unit = tk.Label(acceleration_frame, text=" m/s^2", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+text.grid(row=2, column=0)
+acc_value_frame.grid(row=2, column=1)
+acc_value.pack()
+unit.grid(row=2, column=2)
+acceleration_frame.place(relx=0.03, rely= 0.3, relheight= 0.033, relwidth=0.293)
 
-height_slider = tk.Scale(root, from_=1000, to=100, orient='vertical', resolution=0.1, label="Height (m)")
-height_slider.grid()
-temp_slider = tk.Scale(root, from_=20, to=-20, orient='vertical', resolution=0.1, label="Temperature (°C)")
-temp_slider.grid()
-
-planet_var = tk.StringVar(value="Earth")
-planet_label = tk.Label(root, text="Planet:")
-planet_label.grid(row=4, column=0)
-planet_menu = tk.OptionMenu(root, planet_var, "Mercury", "Venus", "Earth", "Mars", "Moon")
-planet_menu.grid(row=4, column=1)
-
-angle_var = tk.StringVar(value="Rotate 90")
-angle_label = tk.Label(root, text="Angle:")
-angle_label.grid(row=5, column=0)
-angle_menu = tk.OptionMenu(root, angle_var, "Rotate 90", "Rotate 180")
-angle_menu.grid(row=5, column=1)
-
-# Create the output labels
-velocity_label = tk.Label(root, text="Initial Velocity: ")
-velocity_label.grid(row=6, column=0)
-velocity_output = tk.Label(root, text="")
-velocity_output.grid(row=6, column=1)
-
-terminal_label = tk.Label(root, text="Terminal Velocity: ")
-terminal_label.grid(row=7, column=0)
-terminal_output = tk.Label(root, text="")
-terminal_output.grid(row=7, column=1)
-
-kinetic_label = tk.Label(root, text="Kinetic Energy: ")
-kinetic_label.grid(row=8, column=0)
-kinetic_output = tk.Label(root, text="")
-kinetic_output.grid(row=8, column=1)
-
-potential_label = tk.Label(root, text="Gravitational Potential Energy: ")
-potential_label.grid(row=9, column=0)
-potential_output = tk.Label(root, text="")
-potential_output.grid(row=9, column=1)
-
-impact_label = tk.Label(root, text="Impact Force: ")
-impact_label.grid(row=10, column=0)
-impact_output = tk.Label(root, text="")
-impact_output.grid(row=10, column=1)
-
-# Define a function to calculate and display the results
-def calculate_results():
-# Get user inputs
-    obj = object_var.get()
-    air_res = 10
-    h = 100
-    temp = 100 + 273.15
-    pl = planet_var.get()
-
-# Define air density based on temperature
-    P = 101325 * math.exp(-0.00012 * h)  # Define air pressure based on location and altitude
-    rho_air = P / (R * temp)
-
-# Define object weight and diameter based on object type
-    if obj == "Marshmallow":
-        obj_weight = 0.02 * g[pl]
-        obj_diameter = 0.05
-    elif obj == "Brick":
-        obj_weight = 2.07 * g[pl]
-        obj_diameter = 0.2
-    elif obj == "Car":
-        obj_weight = 1200 * g[pl]
-        obj_diameter = 1.5
-    else:
-        result_label.config(text="Invalid object type. Please choose Marshmallow, Brick, or Car.")
-        return
-
-    # Calculate initial velocity and gravitational potential energy
-    v0 = math.sqrt(2 * g[pl] * h)
-    m = obj_weight / g[pl]
-    gpe = obj_weight * h
-
-    # Calculate terminal velocity and kinetic energy
-    if air_res == "Big":
-        Cd = 1.0
-    elif air_res == "Small":
-        Cd = 0.5
-    elif air_res == 'Disable':
-        Cd = 1e-16
-
-    # Calculate terminal velocity and kinetic energy
-    A = math.pi * (obj_diameter / 2) ** 2
-    terminal_v = math.sqrt((2 * m * g[pl]) / (Cd * rho_air * A))
-    ke = 0.5 * m * terminal_v ** 2
-
-    # Calculate impact force
-    ang = angle_var.get()
-    if ang == "Rotate 90":
-        impact_time = v0 / g[pl] # Use initial velocity instead of terminal velocity
-        impact_force = (m * g[pl] + ke / terminal_v) / impact_time
-    else:
-        impact_force = m * g[pl]
-
-    # Update the result label with the calculated values
-    result_label.config(text=f"Initial velocity: {v0:.2f} m/s\n"
-                              f"Terminal velocity: {terminal_v:.2f} m/s\n"
-                              f"Kinetic energy: {ke:.2f} J\n"
-                              f"Gravitational potential energy: {gpe:.2f} J\n"
-                              f"Impact force: {impact_force:.2f} N")
-    window = tk.Tk()
-    window.title("Freefall Object Simulation")
-
-
-    #Create input frames
-    input_frame1 = LabelFrame(window, text="Object Type")
-    input_frame1.pack(fill="both", expand="yes", padx=20, pady=10)
-
-    input_frame2 = LabelFrame(window, text="Air Resistance")
-    input_frame2.pack(fill="both", expand="yes", padx=20, pady=10)
-
-    input_frame3 = LabelFrame(window, text="Height and Temperature")
-    input_frame3.pack(fill="both", expand="yes", padx=20, pady=10)
-
-    input_frame4 = LabelFrame(window, text="Planet")
-    input_frame4.pack(fill="both", expand="yes", padx=20, pady=10)
-
-    input_frame5 = LabelFrame(window, text="Angle")
-    input_frame5.pack(fill="both", expand="yes", padx=20, pady=10)
-    input_frame5.pack(side="top", fill="x", padx=10, pady=5)
-
-
-
-
-    # Add a button to calculate the results
-    calculate_button = tk.Button(root, text="Calculate", command=calculate_results)
-    calculate_button.pack(side="top", pady=10)
-
-    # Add a label to display the results
-    result_label = tk.Label(root, text="", font=("Arial", 12), justify="left")
-    result_label.pack(side="top", padx=10, pady=5)
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.mainloop()
+root.mainloop()
