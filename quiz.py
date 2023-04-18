@@ -96,6 +96,13 @@ class FreefallQuiz:
         improvement_text = f"Topics to improve:{''.join(improvement_topics)}" if improvement_topics else "Great job! You don't need to improve on anything."
         tk.Label(results_window, text=improvement_text).pack(padx=10, pady=10)
 
+        import MainPage
+        self.window.wait_window(results_window)
+        self.window.destroy()
+        root = tk.Tk()
+        MainPage.MainPageGUI(root)
+        root.mainloop()
+
     def whatOS(self):
         if sys.platform.startswith('darwin'):
             return 'Mac'
