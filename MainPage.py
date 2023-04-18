@@ -63,7 +63,9 @@ class MainPageGUI:
         theory.mainloop()
 
     def open_simulation(self):
-        import simulation
+        self.root.destroy()
+        import simulationCopy
+        simulation.mainloop()
 
     def open_quiz(self):
         import quiz
