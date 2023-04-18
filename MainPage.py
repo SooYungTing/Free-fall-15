@@ -71,7 +71,7 @@ class MainPageGUI:
         import quiz
         self.root.destroy()
         quiz = quiz.FreefallQuiz()
-        quiz.mainloop()g
+        quiz.mainloop()
 
     def quit_program(self):
         self.root.destroy()

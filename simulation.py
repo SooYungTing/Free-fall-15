@@ -8,8 +8,12 @@ root = tk.Tk()
 root.attributes("-fullscreen", True)
 root.title("Freefall Object Simulation")
 
-# img = Image.open("Simulation Background.png")
-# photo = ImageTk.PhotoImage(img)
+img = Image.open("Simulation Background.png")
+photo = ImageTk.PhotoImage(img)
+label = tkinter.Label(image=photo)
+label.image = photo
+bg_label = tk.Label(root, image=photo)
+bg_label.place(x=0, y=0, relwidth=1, relheight=1)
 
 # Logic
 
@@ -172,6 +176,7 @@ def start_command():
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
+###
 inputFrame_bg = "#fdfdb7"
 outputFrame_bg_sky = "#87cfea"
 outputFrame_bg_land = "#90ee90"
@@ -194,7 +199,7 @@ outputText.place(relx= 0.43, rely= 0.020)
 
 parachute_box = tk.Frame(inputFrame, highlightbackground="black", highlightthickness=1)
 parachute_box.place(relx=0.0525, rely= 0.1, relwidth= 0.3, relheight= 0.14)
-
+###
 image = Image.open("parachute-hi.png")
 
 #small parachute
