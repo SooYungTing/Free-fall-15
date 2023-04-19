@@ -98,7 +98,6 @@ def sm_parachute_command():
     Cd = 0.5
     # tk.messagebox.showinfo(title="Parachute Choice", message="Small parachute has been selected")
     msgbox.showinfo(title="Parachute Choice", message="Small parachute has been selected")
-    print("sm parachute command works")
     
 
 def lg_parachute_command():
