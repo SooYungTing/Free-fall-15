@@ -170,10 +170,10 @@ def start_command():
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 
-inputFrame_bg = "#fdfdb7"
-outputFrame_bg_sky = "#87cfea"
-outputFrame_bg_land = "#90ee90"
-textBg = "#306f9d"
+inputFrame_bg = "#000327" # 090833
+outputFrame_bg_sky = "#090833" # 000327
+outputFrame_bg_land = "#05021e"
+textBg = "AntiqueWhite2" # 306f9d
 
 inputFrame = tk.Frame(root, highlightbackground= "black", highlightthickness=1, bg=inputFrame_bg)
 inputFrame.place(x=screen_width // 10 + screen_width // 2, y= 0 , width=screen_width, height=screen_height)
@@ -214,7 +214,7 @@ lg_parachute.grid(row=2, column=1, padx=90, pady= 20)
 #temperature scale
 temp_slider = tk.Scale(inputFrame, from_=20, to=-20, orient='vertical', resolution=0.5, sliderlength=50, length=400, width= 50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7")
 temp_slider.set(0.0)
-temp_label = tk.Label(inputFrame, text="Temperature (°C)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="black")
+temp_label = tk.Label(inputFrame, text="Temperature (°C)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="AntiqueWhite2")
 
 temp_slider.place(relx= 0.03, rely=0.35)
 temp_label.place(relx=0.025, rely=0.32 )
@@ -223,7 +223,7 @@ temp_label.place(relx=0.025, rely=0.32 )
 #height scale
 height_slider = tk.Scale(inputFrame, from_=1000, to=100, orient='vertical', resolution=1,  sliderlength= 50, length=400, width=50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7")
 height_slider.set(550)
-height_label = tk.Label(inputFrame, text="Height (m)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="black")
+height_label = tk.Label(inputFrame, text="Height (m)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg="AntiqueWhite2")
 # label="Height (m)",
 height_slider.place(relx=0.11, rely=0.35)
 height_label.place(relx=0.12, rely=0.32 )
@@ -264,10 +264,10 @@ for properties in all_input_buttons:
 
 #Initial Velocity
 initial_velocity_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
-text = tk.Label(initial_velocity_frame, text="Velocity:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
-initial_velocity_value_frame = tk.Frame(initial_velocity_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+text = tk.Label(initial_velocity_frame, text="Velocity:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
+initial_velocity_value_frame = tk.Frame(initial_velocity_frame, highlightbackground= "aquamarine4", highlightthickness=2, bg="gray26", width= 100, height=25)
 initial_velocity_value = tk.Label(initial_velocity_value_frame, text="0.00", font=("Times New Roman", 18))
-unit = tk.Label(initial_velocity_frame, text=" m/s", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+unit = tk.Label(initial_velocity_frame, text=" m/s", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
 text.grid(row=1, column=0)
 initial_velocity_value_frame.grid(row=1, column=1)
 initial_velocity_value.pack()
@@ -276,10 +276,10 @@ initial_velocity_frame.place(relx=0.03, rely= 0.25, relheight= 0.033, relwidth=0
 
 #Kinetic Energy
 ke_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
-text = tk.Label(ke_frame, text="Kinetic Energy:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
-ke_value_frame = tk.Frame(ke_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+text = tk.Label(ke_frame, text="Kinetic Energy:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
+ke_value_frame = tk.Frame(ke_frame, highlightbackground= "aquamarine4", highlightthickness=2, bg="gray26", width= 100, height=25)
 ke_value = tk.Label(ke_value_frame, text="0.00", font=("Times New Roman", 18))
-unit = tk.Label(ke_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+unit = tk.Label(ke_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
 text.grid(row=1, column=0)
 ke_value_frame.grid(row=1, column=1)
 ke_value.pack()
@@ -288,10 +288,10 @@ ke_frame.place(relx=0.35, rely= 0.25, relheight= 0.033, relwidth=0.268)
 
 #Impact Force
 impact_force_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
-text = tk.Label(impact_force_frame, text="Impact Force:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
-impactforce_value_frame = tk.Frame(impact_force_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+text = tk.Label(impact_force_frame, text="Impact Force:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
+impactforce_value_frame = tk.Frame(impact_force_frame, highlightbackground= "aquamarine4", highlightthickness=2, bg="gray26", width= 100, height=25)
 impact_force_value = tk.Label(impactforce_value_frame, text="0.00", font=("Times New Roman", 18))
-unit = tk.Label(impact_force_frame, text=" N", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+unit = tk.Label(impact_force_frame, text=" N", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
 text.grid(row=1, column=0)
 impactforce_value_frame.grid(row=1, column=1)
 impact_force_value.pack()
@@ -300,10 +300,10 @@ impact_force_frame.place(relx=0.7, rely= 0.25, relheight= 0.033, relwidth=0.265)
 
 #Gravitational Potential Energy
 gpe_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
-text = tk.Label(gpe_frame, text="G.P.E:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
-gpe_value_frame = tk.Frame(gpe_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+text = tk.Label(gpe_frame, text="G.P.E:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
+gpe_value_frame = tk.Frame(gpe_frame, highlightbackground= "aquamarine4", highlightthickness=2, bg="gray26", width= 100, height=25)
 gpe_value = tk.Label(gpe_value_frame, text="0.00", font=("Times New Roman", 18))
-unit = tk.Label(gpe_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+unit = tk.Label(gpe_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
 text.grid(row=2, column=0)
 gpe_value_frame.grid(row=2, column=1)
 gpe_value.pack()
@@ -312,10 +312,10 @@ gpe_frame.place(relx=0.434, rely= 0.3, relheight= 0.033, relwidth=0.139)
 
 #Acceleration
 acceleration_frame = tk.Frame(outputFrame_land, bg=outputFrame_bg_land)
-text = tk.Label(acceleration_frame, text="Acceleration:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
-acc_value_frame = tk.Frame(acceleration_frame, highlightbackground= "black", highlightthickness=1, bg="white", width= 100, height=25)
+text = tk.Label(acceleration_frame, text="Acceleration:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
+acc_value_frame = tk.Frame(acceleration_frame, highlightbackground= "aquamarine4", highlightthickness=2, bg="gray26", width= 100, height=25)
 acc_value = tk.Label(acc_value_frame, text="0.00", font=("Times New Roman", 18))
-unit = tk.Label(acceleration_frame, text=" m/s^2", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="black")
+unit = tk.Label(acceleration_frame, text=" m/s^2", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg="AntiqueWhite2")
 text.grid(row=2, column=0)
 acc_value_frame.grid(row=2, column=1)
 acc_value.pack()
