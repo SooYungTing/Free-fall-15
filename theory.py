@@ -92,10 +92,13 @@ class TheoryGUI(tk.Toplevel):
 
     def open_theory2(self):
         import theory2
-        self.destroy()
-        root = tk.Tk()
-        theory2.Theory2GUI(root)
-        root.mainloop()
+        self.withdraw()
+        self.wait_window(theory2.Theory2GUI())
+        self.deiconify()
+        # self.destroy()
+        # root = tk.Tk()
+        # theory2.Theory2GUI(root)
+        # root.mainloop()
 
 if __name__ == "__main__":
     root = tk.Tk()
