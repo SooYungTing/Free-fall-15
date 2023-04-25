@@ -361,7 +361,7 @@ class Simulation(tk.Toplevel):
         elif self.object_var.get() == "Car":
             obj_diameter_animation = 1.5
             
-            car_image = Image.open("car.jpg").resize((200,200))
+            car_image = Image.open("car.png").resize((200,200))
             car_image = car_image.rotate(self.ang)
             obj_image = ImageTk.PhotoImage(car_image)
             
