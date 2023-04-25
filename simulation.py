@@ -1,4 +1,4 @@
-import math
+import math, time
 import tkinter as tk
 from tkinter import messagebox as msgbox
 from PIL import Image, ImageTk
@@ -82,7 +82,6 @@ class Simulation(tk.Toplevel):
         self.height_slider = tk.Scale(self.inputFrame, from_=1000, to=100, orient='vertical', resolution=1,  sliderlength= 50, length=400, width=50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7", fg= textBg)
         self.height_slider.set(550)
         height_label = tk.Label(self.inputFrame, text="Height (m)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg=textBg)
-        # label="Height (m)",
         self.height_slider.place(relx=0.11, rely=0.35)
         height_label.place(relx=0.12, rely=0.32 )
 
@@ -179,7 +178,16 @@ class Simulation(tk.Toplevel):
         self.acc_value.pack()
         unit.grid(row=2, column=2)
         self.acceleration_frame.place(relx=0.03, rely= 0.3, relheight= 0.033, relwidth=0.293)
-        
+
+        # Animation
+        self.frame = tk.Frame(self, background=outputFrame_bg_sky)
+        self.frame.place(x=50, y=50)
+        self.canvas = tk.Canvas(self.frame, width=500, height=690, bg=outputFrame_bg_sky, highlightthickness=0)
+        self.canvas.pack()
+
+        self.canvas.create_rectangle(0, 489, 500, 700, fill='light green', outline='')
+        self.canvas.pack()
+                
 
     # Logic Functions 
 
@@ -204,7 +212,7 @@ class Simulation(tk.Toplevel):
                 mass = 2.07
                 diameter = 0.2
             elif obj == 'Car':
-                mass = 1200
+                mass = 5
                 diameter = 1.5
             
             self.obj_weight = mass * self.g[self.pl]
@@ -217,7 +225,7 @@ class Simulation(tk.Toplevel):
     
     def getGPE(self, obj_weight, pl, h):
         # Calculate initial velocity and gravitational potential energy
-        self.v0 = (2 * self.g[pl] * h) ** 1/2
+        self.v0 = (2 * self.g[pl] * h) ** (1/2)
         self.m = obj_weight / self.g[pl]
         self.gpe = obj_weight * h
     
@@ -225,9 +233,9 @@ class Simulation(tk.Toplevel):
         self.acc = 0 if self.impact_time == 0 else self.v0 / self.impact_time
     
     def getKE(self, obj_diameter, pl, Cd, rho_air, m):
-        A = math.pi * (obj_diameter / 2) ** 2
+        A = math.pi * ((obj_diameter / 2) ** 2)
         self.terminal_v = (2 * m * self.g[pl]) / (Cd * rho_air * A)
-        self.ke = 0.5 * m * self.terminal_v ** 2
+        self.ke = 0.5 * m * (self.terminal_v ** 2)
     
     def getImpactForce(self, ang, v0, pl, m, ke, terminal_v):
         if ang == 90:
@@ -270,6 +278,9 @@ class Simulation(tk.Toplevel):
         if self.ang == 360:
             self.ang = 0
     
+    def back_command(self):
+        self.destroy()
+    
     def reset_command(self):
         # Reset variable values
         self.Cd = 1
@@ -290,9 +301,6 @@ class Simulation(tk.Toplevel):
         self.ke_value.config(text='0.00')
         self.gpe_value.config(text='0.00')
         self.impact_force_value.config(text='0.00')
-
-    def back_command(self):
-        self.destroy()
     
     def start_command(self):
         self.getInput() 
@@ -310,3 +318,70 @@ class Simulation(tk.Toplevel):
         self.ke_value.config(text=f"{self.ke:.2f}")
         self.gpe_value.config(text=f"{self.gpe:.2f}")
         self.impact_force_value.config(text=f"{self.impact_force:.2f}")
+        self.start_animation()
+    
+    def start_animation(self):
+        self.canvas.delete('all')
+
+        self.canvas.create_rectangle(0, 489, 500, 700, fill='light green', outline='')
+        self.canvas.pack()
+
+        obj_mass_dict = {"Marshmallow": 0.02, "Brick": 2.07, "Car": 5}
+        obj_mass = obj_mass_dict[self.object_var.get()] 
+
+        obj_diamemetr_dict={"Marshmallow" : 0.05,"Brick":0.2,"Car":1.5}
+        obj_diameter_animation = obj_diamemetr_dict[self.object_var.get()]
+        height = self.height_slider.get()
+        x_pos = 380
+        y_pos = -(height/6)
+        x_vel = 0
+        y_vel = 0
+        dt = 0.06
+
+
+        obj_speed = math.sqrt((2 * (obj_mass)* ((self.g[self.planet_var.get()]))) / (0.5 * self.rho_air * obj_diameter_animation ** 2 * self.Cd))
+
+        #Air resistance for each object
+        if self.object_var.get() == "Marshmallow":
+            obj_diameter_animation = 0.05
+            marshmallow_image = Image.open("marshmallow.png").resize((20, 20))
+            marshmallow_image = marshmallow_image.rotate(self.ang)
+            obj_image = ImageTk.PhotoImage(marshmallow_image)
+           
+            y_pos_limit = 483
+
+        elif self.object_var.get() == "Brick":
+            obj_diameter_animation = 0.2
+            brick_image = Image.open("brick.png").resize((80, 80))
+            brick_image = brick_image.rotate(self.ang)
+            obj_image = ImageTk.PhotoImage(brick_image)
+
+            y_pos_limit = 455 if self.ang in [90, 270] else 478
+
+        elif self.object_var.get() == "Car":
+            obj_diameter_animation = 1.5
+            
+            car_image = Image.open("car.jpg").resize((200,200))
+            car_image = car_image.rotate(self.ang)
+            obj_image = ImageTk.PhotoImage(car_image)
+            
+            if self.ang in [90, 270]:
+                y_pos_limit = 439
+            elif self.ang == 180:
+                y_pos_limit = 450
+            else:
+                y_pos_limit = 470
+
+        drag_force = 0.5 * self.rho_air * obj_speed ** 2 * obj_diameter_animation ** 2 * self.Cd
+        object_display = self.canvas.create_image(x_pos, y_pos, anchor='center',image=obj_image)
+
+        while True:
+            self.canvas.move(object_display, x_vel, y_vel)
+            self.canvas.update()
+            time.sleep(0.03)
+            get_coords = self.canvas.coords(object_display)
+            x_pos, y_pos = get_coords
+            acceleration = self.g[self.planet_var.get()]
+            y_vel -= -drag_force*dt
+            y_vel += acceleration*dt     
+            y_vel = min(y_vel, y_pos_limit - y_pos)
