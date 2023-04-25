@@ -2,31 +2,31 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import sys
 
-class TheoryGUI:
-    def __init__(self, master):
-        self.root = master
-        self.root.attributes("-fullscreen", True)
-        self.root.title("Theories And Equations")
+class TheoryGUI(tk.Toplevel):
+    def __init__(self):
+        super().__init__()
+        self.attributes("-fullscreen", True)
+        self.title("Theories And Equations")
 
         # Set background image
         bg_image = Image.open("Background.png")
-        bg_image = bg_image.resize((self.root.winfo_screenwidth(), self.root.winfo_screenheight()))
+        bg_image = bg_image.resize((self.winfo_screenwidth(), self.winfo_screenheight()))
         self.bg_photo = ImageTk.PhotoImage(bg_image)
-        canvas = tk.Canvas(self.root, highlightthickness=0)
+        canvas = tk.Canvas(self, highlightthickness=0)
         canvas.create_image(0, 0, image=self.bg_photo, anchor='nw')
         canvas.pack(fill="both", expand=True)
 
         # For centering purposes
-        half_x = self.root.winfo_screenwidth() // 2
-        half_y = self.root.winfo_screenheight() // 2
+        half_x = self.winfo_screenwidth() // 2
+        half_y = self.winfo_screenheight() // 2
 
         # Create label to display title message
         welcome_message = "Freefall Theories And Equations"
         canvas.create_text(half_x, 50, text=welcome_message, fill="yellow", font=("Times New Roman", 40, "bold"))
 
         # For positioning the instruction  purposes
-        position_x = self.root.winfo_screenwidth() // 15
-        position_y = self.root.winfo_screenheight() // 5
+        position_x = self.winfo_screenwidth() // 15
+        position_y = self.winfo_screenheight() // 5
 
         # Create label for theory 1 title
         theory1_title = "\tNewton's Second Law:"
@@ -66,12 +66,12 @@ class TheoryGUI:
         canvas.create_text(half_x/2.25, half_y/0.71, text=theory3, fill="white", font=("Times New Roman", 25))
 
         # Create button to go back to MainPage
-        self.back_button = tk.Button(self.root, text="Back", font=("Times New Roman", 15), command=self.open_MainPage,
+        self.back_button = tk.Button(self, text="Back", font=("Times New Roman", 15), command=self.open_MainPage,
                                      width=12, height=2)
         self.back_button.place(relx=0.95, rely=0.95, anchor='se')
 
         # Create button to go second page of theory
-        self.more_button = tk.Button(self.root, text="More", font=("Times New Roman", 15), command=self.open_theory2,
+        self.more_button = tk.Button(self, text="More", font=("Times New Roman", 15), command=self.open_theory2,
                                      width=12, height=2)
         self.more_button.place(relx=0.85, rely=0.95, anchor='se')
 
@@ -87,14 +87,12 @@ class TheoryGUI:
 
     def open_MainPage(self):
         import MainPage
-        self.root.destroy()
-        root = tk.Tk()
-        MainPage.MainPageGUI(root)
-        root.mainloop()
+        self.destroy()
+
 
     def open_theory2(self):
         import theory2
-        self.root.destroy()
+        self.destroy()
         root = tk.Tk()
         theory2.Theory2GUI(root)
         root.mainloop()

@@ -3,8 +3,12 @@ from PIL import Image, ImageTk
 import sys
 
 
-class FreefallQuiz:
+class FreefallQuiz(tk.Toplevel):
     def __init__(self):
+        super().__init__()
+        self.title("Freefall Theory Quiz")
+        self.attributes('-fullscreen', True)
+
         self.questions = ["1. What is freefall?",
                           "2. Can freefall occur in a vacuum?",
                           "3. What is the formula for calculating the distance an object falls during freefall?",
@@ -30,19 +34,16 @@ class FreefallQuiz:
                        "\n-  Calculating distance during freefall",
                        "\n-  Air resistance effect in freefall",
                        "\n-  Acceleration due to gravity"]
-
-        self.window = tk.Tk()
-        self.window.title("Freefall Theory Quiz")
-        self.window.attributes('-fullscreen', True)
+  
         self.create_widgets()
 
     def create_widgets(self):
         self.question_labels, self.answer_frames, self.answer_radios, self.answer_vars = [], [], [], []
 
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
+        screen_width = self.winfo_screenwidth()
+        screen_height = self.winfo_screenheight()
 
-        canvas = tk.Canvas(self.window, highlightthickness=0)
+        canvas = tk.Canvas(self, highlightthickness=0)
         canvas.pack(fill="both", expand=True)
 
         bg_image = Image.open("Background.png")
@@ -50,7 +51,7 @@ class FreefallQuiz:
         self.bg_photo = ImageTk.PhotoImage(bg_image)
         canvas.create_image(0, 0, image=self.bg_photo, anchor='nw')
 
-        half_x = self.window.winfo_screenwidth() // 2
+        half_x = self.winfo_screenwidth() // 2
 
         canvas.create_text(half_x, 50, text="Quiz", fill="yellow", font=("Times New Roman", 40, "bold"))
 
@@ -88,7 +89,7 @@ class FreefallQuiz:
         self.show_results(score, improvement_topics)
 
     def show_results(self, score, improvement_topics):
-        results_window = tk.Toplevel(self.window)
+        results_window = tk.Toplevel(self)
         results_window.title("Quiz Results")
 
         tk.Label(results_window, text=f"Total Marks: {score}/{len(self.questions)}").pack(padx=10, pady=10)
@@ -96,13 +97,8 @@ class FreefallQuiz:
         improvement_text = f"Topics to improve:{''.join(improvement_topics)}" if improvement_topics else "Great job! You don't need to improve on anything."
         tk.Label(results_window, text=improvement_text).pack(padx=10, pady=10)
 
-        import MainPage
-        self.window.wait_window(results_window)
-        self.window.destroy()
-        root = tk.Tk()
-        MainPage.MainPageGUI(root)
-        root.mainloop()
-
+        self.wait_window(results_window) # Waits until the window is destroyed, then proceeds to next line
+        self.destroy()
     def whatOS(self):
         if sys.platform.startswith('darwin'):
             return 'Mac'
@@ -117,10 +113,3 @@ class FreefallQuiz:
         os = self.whatOS()
         return 'SystemTransparent' if os == 'Mac' else '#011547'
 
-    def run(self):
-        self.window.mainloop()
-
-
-if __name__ == "__main__":
-    quiz = FreefallQuiz()
-    quiz.run()
