@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import sys
 
-class MainPageGUI(tk.Tk):
+class MainPageGUI(tk.Toplevel):
     def __init__(self):
         super().__init__()
         self.attributes("-fullscreen", True)
@@ -69,6 +69,7 @@ class MainPageGUI(tk.Tk):
         
 
     def quit_program(self):
+        import InstructionPage 
         self.destroy()
 
     def closeCurrentOpenNew(self, window):
@@ -87,6 +88,3 @@ class MainPageGUI(tk.Tk):
         self.deiconify() # Show the sign in window again
         self.update() # Update the window to ensure it is displayed
 
-if __name__ == "__main__":
-    root = MainPageGUI()
-    root.mainloop()
