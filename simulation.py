@@ -19,33 +19,36 @@ class Simulation(tk.Toplevel):
         self.impact_time = 0
         self.R = 287.058 # Specific gas constant of dry air in J/(kg*K)
         self.g = {
-            "Mercury": 3.7,
-            "Venus": 8.87,
-            "Earth": 9.81,
-            "Mars": 3.71,
-            "Moon": 1.62
+            "Mercury | 3.7 m/s^2": 3.7,
+            "Venus | 8.87 m/s^2": 8.87,
+            "Earth | 9.81 m/s^2": 9.81,
+            "Mars | 3.71 m/s^2": 3.71,
+            "Moon | 1.62 m/s^2": 1.62
         }
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
         # Background colors for each frame
-        inputFrame_bg = '#13293d' 
-        outputFrame_bg_sky = '#1f487e'
-        outputFrame_bg_land = '#1d3461'
-        textBg = '#3fc1c0'
-        self.inputFrame = tk.Frame(self, highlightbackground= "black", highlightthickness=1, bg=inputFrame_bg)
+        self.inputFrame_bg = '#fcfeb5' 
+        self.outputFrame_bg_sky = '#87ceea'
+        self.outputFrame_bg_land = '#90ed90'
+        self.textBg = '#216fc0'
+                
+
+
+        self.inputFrame = tk.Frame(self, highlightbackground= "black", highlightthickness=1, bg=self.inputFrame_bg)
         self.inputFrame.place(x=screen_width // 10 + screen_width // 2, y= 0 , width=screen_width, height=screen_height)
 
-        self.outputFrame_sky = tk.Frame(self, bg=outputFrame_bg_sky)
+        self.outputFrame_sky = tk.Frame(self, bg=self.outputFrame_bg_sky)
         self.outputFrame_sky.place(x=0, y=0, width= screen_width // 10 + screen_width // 2, height= screen_height // 1.6)
 
-        self.outputFrame_land = tk.Frame(self, bg=outputFrame_bg_land)
+        self.outputFrame_land = tk.Frame(self, bg=self.outputFrame_bg_land)
         self.outputFrame_land.place(x=0, y=screen_height // 1.6, width= screen_width // 10 + screen_width // 2, height= screen_height)
 
-        self.inputText = tk.Label(self.inputFrame, text="Input", font=("Times New Roman", "23", "bold"), bg=inputFrame_bg, fg=textBg)
+        self.inputText = tk.Label(self.inputFrame, text="Input", font=("Times New Roman", "23", "bold"), bg=self.inputFrame_bg, fg=self.textBg)
         self.inputText.place(relx= 0.185, rely= 0.010)
 
-        self.outputText = tk.Label(self.outputFrame_sky, text="Output", font=("Times New Roman", "23", "bold"), bg=outputFrame_bg_sky, fg=textBg)
+        self.outputText = tk.Label(self.outputFrame_sky, text="Output", font=("Times New Roman", "23", "bold"), bg=self.outputFrame_bg_sky, fg=self.textBg)
         self.outputText.place(relx= 0.43, rely= 0.020)
 
         self.parachute_box = tk.Frame(self.inputFrame, highlightbackground="black", highlightthickness=1)
@@ -70,20 +73,20 @@ class Simulation(tk.Toplevel):
         self.lg_parachute.grid(row=2, column=1, padx=90, pady= 20)
 
         #temperature scale
-        self.temp_slider = tk.Scale(self.inputFrame, from_=20, to=-20, orient='vertical', resolution=0.5, sliderlength=50, length=400, width= 50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7", fg=textBg)
+        self.temp_slider = tk.Scale(self.inputFrame, from_=20, to=-20, orient='vertical', resolution=0.5, sliderlength=50, length=400, width= 50, bg=self.inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7", fg=self.textBg)
         self.temp_slider.set(0.0)
-        self.temp_label = tk.Label(self.inputFrame, text="Temperature (°C)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg=textBg)
+        self.temp_label = tk.Label(self.inputFrame, text="Temperature (°C)", font=("Times New Roman", "14"), bg=self.inputFrame_bg, fg=self.textBg)
 
         self.temp_slider.place(relx= 0.03, rely=0.35)
         self.temp_label.place(relx=0.025, rely=0.32 )
 
 
         #height scale
-        self.height_slider = tk.Scale(self.inputFrame, from_=1000, to=100, orient='vertical', resolution=1,  sliderlength= 50, length=400, width=50, bg=inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7", fg= textBg)
+        self.height_slider = tk.Scale(self.inputFrame, from_=1000, to=100, orient='vertical', resolution=1,  sliderlength= 50, length=400, width=50, bg=self.inputFrame_bg, bd=2, highlightthickness=0, highlightcolor="#d7d7d7", fg= self.textBg)
         self.height_slider.set(550)
-        height_label = tk.Label(self.inputFrame, text="Height (m)", font=("Times New Roman", "14"), bg=inputFrame_bg, fg=textBg)
+        self.height_label = tk.Label(self.inputFrame, text="Height (m)", font=("Times New Roman", "14"), bg=self.inputFrame_bg, fg=self.textBg)
         self.height_slider.place(relx=0.11, rely=0.35)
-        height_label.place(relx=0.12, rely=0.32 )
+        self.height_label.place(relx=0.12, rely=0.32 )
 
         # Object type
         self.object_var = tk.StringVar(value="Object")
@@ -92,8 +95,9 @@ class Simulation(tk.Toplevel):
         self.object_menu.place(relx=0.22, rely=0.36, relwidth=0.15)
 
         # Planet Type
-        self.planet_var = tk.StringVar(value="Earth")
-        self.planet_menu = tk.OptionMenu(self.inputFrame, self.planet_var, "Mercury", "Venus", "Earth", "Mars", "Moon")
+        self.planet_var = tk.StringVar(self, "Earth | 9.81 m/s^2")
+        self.planet_var.trace_add('write', self.changeBackground)
+        self.planet_menu = tk.OptionMenu(self.inputFrame, self.planet_var, "Earth | 9.81 m/s^2", "Venus | 8.87 m/s^2", "Mercury | 3.7 m/s^2", "Mars | 3.71 m/s^2", "Moon | 1.62 m/s^2", command= lambda option: self.changeBackground(self.planet_var.get()))
         self.planet_menu.config(font=('Times New Roman', 18))
         self.planet_menu.place(relx=0.22, rely=0.46, relwidth=0.15)
 
@@ -120,72 +124,72 @@ class Simulation(tk.Toplevel):
         #Outputs
 
         #Initial Velocity
-        self.initial_velocity_frame = tk.Frame(self.outputFrame_land, bg=outputFrame_bg_land)
-        text = tk.Label(self.initial_velocity_frame, text="Velocity:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
+        self.initial_velocity_frame = tk.Frame(self.outputFrame_land, bg=self.outputFrame_bg_land)
+        self.initial_velocity_text = tk.Label(self.initial_velocity_frame, text="Velocity:", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
         self.initial_velocity_value_frame = tk.Frame(self.initial_velocity_frame, highlightbackground= "#B0A3F5", highlightthickness=2, bg="gray", width= 100, height=25)
         self.initial_velocity_value = tk.Label(self.initial_velocity_value_frame, text="0.00", font=("Times New Roman", 18))
-        unit = tk.Label(self.initial_velocity_frame, text=" m/s", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
-        text.grid(row=1, column=0)
+        self.initial_velocity_unit = tk.Label(self.initial_velocity_frame, text=" m/s", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
+        self.initial_velocity_text.grid(row=1, column=0)
         self.initial_velocity_value_frame.grid(row=1, column=1)
         self.initial_velocity_value.pack()
-        unit.grid(row=1, column=2)
+        self.initial_velocity_unit.grid(row=1, column=2)
         self.initial_velocity_frame.place(relx=0.03, rely= 0.25, relheight= 0.033, relwidth=0.23)
 
         #Kinetic Energy
-        self.ke_frame = tk.Frame(self.outputFrame_land, bg=outputFrame_bg_land)
-        text = tk.Label(self.ke_frame, text="Kinetic Energy:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
+        self.ke_frame = tk.Frame(self.outputFrame_land, bg=self.outputFrame_bg_land)
+        self.ke_text = tk.Label(self.ke_frame, text="Kinetic Energy:", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
         self.ke_value_frame = tk.Frame(self.ke_frame, highlightbackground= "#B0A3F5", highlightthickness=2, bg="gray", width= 100, height=25)
         self.ke_value = tk.Label(self.ke_value_frame, text="0.00", font=("Times New Roman", 18))
-        unit = tk.Label(self.ke_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
-        text.grid(row=1, column=0)
+        self.ke_unit = tk.Label(self.ke_frame, text=" J", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
+        self.ke_text.grid(row=1, column=0)
         self.ke_value_frame.grid(row=1, column=1)
         self.ke_value.pack()
-        unit.grid(row=1, column=2)
+        self.ke_unit.grid(row=1, column=2)
         self.ke_frame.place(relx=0.35, rely= 0.25, relheight= 0.033, relwidth=0.268)
 
         #Impact Force
-        self.impact_force_frame = tk.Frame(self.outputFrame_land, bg=outputFrame_bg_land)
-        text = tk.Label(self.impact_force_frame, text="Impact Force:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
+        self.impact_force_frame = tk.Frame(self.outputFrame_land, bg=self.outputFrame_bg_land)
+        self.impact_text = tk.Label(self.impact_force_frame, text="Impact Force:", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
         self.impactforce_value_frame = tk.Frame(self.impact_force_frame, highlightbackground= "#B0A3F5", highlightthickness=2, bg="gray", width= 100, height=25)
         self.impact_force_value = tk.Label(self.impactforce_value_frame, text="0.00", font=("Times New Roman", 18))
-        unit = tk.Label(self.impact_force_frame, text=" N", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
-        text.grid(row=1, column=0)
+        self.impact_unit = tk.Label(self.impact_force_frame, text=" N", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
+        self.impact_text.grid(row=1, column=0)
         self.impactforce_value_frame.grid(row=1, column=1)
         self.impact_force_value.pack()
-        unit.grid(row=1, column=2)
+        self.impact_unit.grid(row=1, column=2)
         self.impact_force_frame.place(relx=0.7, rely= 0.25, relheight= 0.033, relwidth=0.265)
 
         #Gravitational Potential Energy
-        self.gpe_frame = tk.Frame(self.outputFrame_land, bg=outputFrame_bg_land)
-        text = tk.Label(self.gpe_frame, text="G.P.E:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
+        self.gpe_frame = tk.Frame(self.outputFrame_land, bg=self.outputFrame_bg_land)
+        self.gpe_text = tk.Label(self.gpe_frame, text="G.P.E:", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
         self.gpe_value_frame = tk.Frame(self.gpe_frame, highlightbackground= "#B0A3F5", highlightthickness=2, bg="gray", width= 100, height=25)
         self.gpe_value = tk.Label(self.gpe_value_frame, text="0.00", font=("Times New Roman", 18))
-        unit = tk.Label(self.gpe_frame, text=" J", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
-        text.grid(row=2, column=0)
+        self.gpe_unit = tk.Label(self.gpe_frame, text=" J", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
+        self.gpe_text.grid(row=2, column=0)
         self.gpe_value_frame.grid(row=2, column=1)
         self.gpe_value.pack()
-        unit.grid(row=2, column=2)
+        self.gpe_unit.grid(row=2, column=2)
         self.gpe_frame.place(relx=0.434, rely= 0.3, relheight= 0.033, relwidth=0.139)
 
         #Acceleration
-        self.acceleration_frame = tk.Frame(self.outputFrame_land, bg=outputFrame_bg_land)
-        text = tk.Label(self.acceleration_frame, text="Acceleration:", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
+        self.acceleration_frame = tk.Frame(self.outputFrame_land, bg=self.outputFrame_bg_land)
+        self.acc_text = tk.Label(self.acceleration_frame, text="Acceleration:", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
         self.acc_value_frame = tk.Frame(self.acceleration_frame, highlightbackground= "#B0A3F5", highlightthickness=2, bg="gray", width= 100, height=25)
         self.acc_value = tk.Label(self.acc_value_frame, text="0.00", font=("Times New Roman", 18))
-        unit = tk.Label(self.acceleration_frame, text=" m/s^2", font=("Times New Roman", 18), bg=outputFrame_bg_land, fg=textBg)
-        text.grid(row=2, column=0)
+        self.acc_unit = tk.Label(self.acceleration_frame, text=" m/s^2", font=("Times New Roman", 18), bg=self.outputFrame_bg_land, fg=self.textBg)
+        self.acc_text.grid(row=2, column=0)
         self.acc_value_frame.grid(row=2, column=1)
         self.acc_value.pack()
-        unit.grid(row=2, column=2)
+        self.acc_unit.grid(row=2, column=2)
         self.acceleration_frame.place(relx=0.03, rely= 0.3, relheight= 0.033, relwidth=0.293)
 
         # Animation
-        self.frame = tk.Frame(self, background=outputFrame_bg_sky)
+        self.frame = tk.Frame(self, background=self.outputFrame_bg_sky)
         self.frame.place(x=50, y=50)
-        self.canvas = tk.Canvas(self.frame, width=500, height=690, bg=outputFrame_bg_sky, highlightthickness=0)
+        self.canvas = tk.Canvas(self.frame, width=700, height=817, bg=self.outputFrame_bg_sky, highlightthickness=0)
         self.canvas.pack()
 
-        self.canvas.create_rectangle(0, 489, 500, 700, fill='light green', outline='')
+        self.rectangle = self.canvas.create_rectangle(0, 616, 700, 826, fill=self.outputFrame_bg_land, outline='')
         self.canvas.pack()
                 
 
@@ -245,6 +249,73 @@ class Simulation(tk.Toplevel):
             self.impact_force = m * self.g[pl]
 
     # Button Functions
+    def changeBackground(self, selected_value):
+        # Set different coloured backgrounds for different planets
+        match selected_value:
+            case 'Earth | 9.81 m/s^2':
+                # Background colours
+                self.inputFrame_bg = '#fdfdb7' # The frame colour on the right
+                self.outputFrame_bg_sky = '#87ceea' # The frame colour on the left at the top
+                self.outputFrame_bg_land = '#90ed90' # The frame colour on the left at the bottom
+                self.textBg = '#2071c2' # Text colour
+                
+                self.updateColours() # Function to update the colour
+
+            case 'Mercury | 3.7 m/s^2':
+                '''
+                Add the background colors here
+
+                Then call the 'self.updateColours()' function
+                '''
+
+            case 'Venus | 8.87 m/s^2':
+                '''
+                Add the background colors here
+
+                Then call the 'self.updateColours()' function
+                '''
+
+            case "Mars | 3.71 m/s^2":
+                '''
+                Add the background colors here
+
+                Then call the 'self.updateColours()' function
+                '''
+                
+            case "Moon | 1.62 m/s^2":
+                self.inputFrame_bg = '#13293d' 
+                self.outputFrame_bg_sky = '#1f487e'
+                self.outputFrame_bg_land = '#1d3461'
+                self.textBg = '#3fc1c0'
+                self.updateColours()
+            
+                
+        
+    def updateColours(self):
+
+        '''Apply the new colours to the frames'''
+        self.inputFrame.config(bg=self.inputFrame_bg)
+        self.outputFrame_sky.config(bg=self.outputFrame_bg_sky)
+        self.outputFrame_land.config(bg=self.outputFrame_bg_land)
+
+        '''Apply the new colours to the text'''
+        self.inputText.config(fg=self.textBg, bg=self.inputFrame_bg)
+        self.outputText.config(fg=self.textBg, bg=self.outputFrame_bg_sky)
+
+        '''Apply the new colours to the widgets'''
+
+        # Input widgets
+        self.temp_slider.config(bg=self.inputFrame_bg, fg=self.textBg) ; self.temp_label.config(bg=self.inputFrame_bg, fg=self.textBg)
+        self.height_slider.config(bg=self.inputFrame_bg, fg=self.textBg) ; self.height_label.config(bg=self.inputFrame_bg, fg=self.textBg)
+        
+        # Output widgets
+        self.acc_text.config(fg=self.textBg, bg=self.outputFrame_bg_land) ; self.acc_unit.config(fg=self.textBg, bg=self.outputFrame_bg_land); self.acceleration_frame.config(bg=self.outputFrame_bg_land)
+        self.impact_text.config(fg=self.textBg, bg=self.outputFrame_bg_land) ; self.impact_unit.config(fg=self.textBg, bg=self.outputFrame_bg_land); self.impact_force_frame.config(bg=self.outputFrame_bg_land)
+        self.initial_velocity_text.config(fg=self.textBg, bg=self.outputFrame_bg_land) ; self.initial_velocity_unit.config(fg=self.textBg, bg=self.outputFrame_bg_land) ; self.initial_velocity_frame.config(bg=self.outputFrame_bg_land)
+        self.gpe_text.config(fg=self.textBg, bg=self.outputFrame_bg_land) ; self.gpe_unit.config(fg=self.textBg, bg=self.outputFrame_bg_land) ; self.gpe_frame.config(bg=self.outputFrame_bg_land)
+        self.ke_text.config(fg=self.textBg, bg=self.outputFrame_bg_land) ; self.ke_unit.config(fg=self.textBg, bg=self.outputFrame_bg_land); self.ke_frame.config(bg=self.outputFrame_bg_land)
+        self.frame.config(bg=self.outputFrame_bg_sky) ; self.canvas.config(bg=self.outputFrame_bg_sky) ; self.canvas.itemconfig(self.rectangle, fill = self.outputFrame_bg_land)
+
     def sm_parachute_command(self):
         self.Cd = 0.5
         msgbox.showinfo(title='Parachute Choice', message='Small parachute has been selected')
@@ -293,7 +364,7 @@ class Simulation(tk.Toplevel):
         self.height_slider.set(550)
         self.temp_slider.set(0.0)
         self.object_var.set("Object")
-        self.planet_var.set("Earth")
+        self.planet_var.set("Earth | 9.82 m/s^2")
 
         # Reset Output Values
         self.initial_velocity_value.config(text='0.00')
@@ -301,11 +372,14 @@ class Simulation(tk.Toplevel):
         self.ke_value.config(text='0.00')
         self.gpe_value.config(text='0.00')
         self.impact_force_value.config(text='0.00')
+        self.canvas.delete('all')
+        self.canvas.create_rectangle(0, 616, 700, 826, fill=self.outputFrame_bg_land, outline='')
+        self.canvas.pack()
     
     def start_command(self):
         self.getInput() 
         self.v0 = math.sqrt(2 * self.g[self.pl] * self.h)
-        self.getGPE(obj_weight=self.obj_weight, pl=self.pl, h=self.h)
+        self.getGPE(self.obj_weight, self.pl, self.h)
         self.calcImpact_time(self.v0, pl=self.pl)
         self.object_validation(self.obj)
         self.getAirPressure(self.h, self.R, self.temp)
@@ -323,13 +397,13 @@ class Simulation(tk.Toplevel):
     def start_animation(self):
         self.canvas.delete('all')
 
-        self.canvas.create_rectangle(0, 489, 500, 700, fill='light green', outline='')
+        self.canvas.create_rectangle(0, 616, 700, 826, fill=self.outputFrame_bg_land, outline='')
         self.canvas.pack()
 
         obj_mass_dict = {"Marshmallow": 0.02, "Brick": 2.07, "Car": 5}
         obj_mass = obj_mass_dict[self.object_var.get()] 
 
-        obj_diamemetr_dict={"Marshmallow" : 0.05,"Brick":0.2,"Car":1.5}
+        obj_diamemetr_dict={"Marshmallow" : 0.05, "Brick" : 0.2,"Car" : 1.5}
         obj_diameter_animation = obj_diamemetr_dict[self.object_var.get()]
         height = self.height_slider.get()
         x_pos = 380
@@ -346,34 +420,29 @@ class Simulation(tk.Toplevel):
             obj_diameter_animation = 0.05
             marshmallow_image = Image.open("marshmallow.png").resize((20, 20))
             marshmallow_image = marshmallow_image.rotate(self.ang)
-            obj_image = ImageTk.PhotoImage(marshmallow_image)
-           
-            y_pos_limit = 483
+            self.obj_image = ImageTk.PhotoImage(marshmallow_image)
+
+            y_pos_limit = 613
 
         elif self.object_var.get() == "Brick":
             obj_diameter_animation = 0.2
             brick_image = Image.open("brick.png").resize((80, 80))
             brick_image = brick_image.rotate(self.ang)
-            obj_image = ImageTk.PhotoImage(brick_image)
+            self.obj_image = ImageTk.PhotoImage(brick_image)
 
-            y_pos_limit = 455 if self.ang in [90, 270] else 478
+            y_pos_limit = 625 if self.ang in [90, 270] else 628
 
         elif self.object_var.get() == "Car":
             obj_diameter_animation = 1.5
-            
+
             car_image = Image.open("car.png").resize((200,200))
             car_image = car_image.rotate(self.ang)
-            obj_image = ImageTk.PhotoImage(car_image)
-            
-            if self.ang in [90, 270]:
-                y_pos_limit = 439
-            elif self.ang == 180:
-                y_pos_limit = 450
-            else:
-                y_pos_limit = 470
+            self.obj_image = ImageTk.PhotoImage(car_image)
+
+            y_pos_limit = 590 if self.ang in [90, 180, 270] else 610
 
         drag_force = 0.5 * self.rho_air * obj_speed ** 2 * obj_diameter_animation ** 2 * self.Cd
-        object_display = self.canvas.create_image(x_pos, y_pos, anchor='center',image=obj_image)
+        object_display = self.canvas.create_image(x_pos, y_pos, anchor='center',image=self.obj_image)
 
         while True:
             self.canvas.move(object_display, x_vel, y_vel)
