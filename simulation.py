@@ -297,7 +297,7 @@ class Simulation(tk.Toplevel):
                 self.inputFrame_bg = '#97979f'
                 self.outputFrame_bg_sky = '#ceccd1'
                 self.outputFrame_bg_land = '#504e51'
-                self.textBg = '#663926'
+                self.textBg = '#f5e1fd'
                 self.updateColours()
 
             case 'Venus | 8.87 m/s^2':
